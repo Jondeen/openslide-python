@@ -1,0 +1,2 @@
+#!/bin/bash
+python deepzoom_multiserver.py -d -p 5678 -l 0.0.0.0 /usr/local/OpenSlideServe/data 
