@@ -1,0 +1,42 @@
+<!doctype html>
+<title>Test images</title>
+
+<style type="text/css">
+li {
+    list-style-type: none;
+    margin: 0.4em 0;
+}
+li.none {
+    font-style: italic;
+}
+</style>
+
+<h1>Test Images</h1>
+
+<ul>
+    {% for entry in root_dir.children recursive %}
+        <li>
+            {% if entry.url_path %}
+                <a href="{{ url_for('slide', path=entry.url_path) }}">
+                    {{ entry.name }}
+                </a>
+                {% if entry.name.find('.mrxs') == -1 %}
+		&nbsp;
+                (<a href="{{ url_for('static', filename='data/'+entry.url_path) }}">
+                   Download original
+                </a>)
+                {% endif %}
+            {% else %}
+                {{ entry.name }}
+            {% endif %}
+
+            {% if entry.children %}
+                <ul>
+                    {{ loop(entry.children) }}
+                </ul>
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="none">None</li>
+    {% endfor %}
+</ul>

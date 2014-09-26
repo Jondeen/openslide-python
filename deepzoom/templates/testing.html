@@ -1,0 +1,29 @@
+<!doctype html>
+<title>Available Slides</title>
+
+<style type="text/css">
+li {
+    list-style-type: none;
+    margin: 0.4em 0;
+}
+li.none {
+    font-style: italic;
+}
+</style>
+
+<h1>Available Slides</h1>
+
+<ul>
+    {% for entry in root_dir %}
+        <li>
+            {% if entry.find('.jpg') != -1 %}
+                    {{ entry }}
+		&nbsp;<br />
+                <img src="{{ url_for('static', filename='data/testing/'+entry) }}">
+		<br />
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="none">None</li>
+    {% endfor %}
+</ul>

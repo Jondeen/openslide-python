@@ -1,0 +1,103 @@
+<!doctype html>
+<title>{{ slide_filename }}</title>
+
+<style type="text/css">
+html {
+    overflow: hidden;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+div#view {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+}
+</style>
+
+<div id="view"></div>
+<div id="thresh_overlay"><button id="thresh_overlay_butt">Click me!</button></div>
+<div id="change_input">
+	<form action="#" method="get">
+		<table>
+			<tr><td>Red:</td><td><input type="text" name="rmin" id="rmin" value="141"/><input type="text" name="rmax" id="rmax" value="228"/><br /></tr>
+			<tr><td>Green:</td><td><input type="text" name="gmin" id="gmin" value="0"/><input type="text" name="gmax" id="gmax" value="150"/><br /></tr>
+			<tr><td>Blue:</td><td><input type="text" name="bmin" id="bmin" value="61"/><input type="text" name="bmax" id="bmax" value="208"/></td></tr>
+		</table>
+		<button id="set_butt">Toggle threshold</button>
+	</form>
+</div>
+<link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    var viewer = new OpenSeadragon({
+        id: "view",
+        tileSources: [{{ slide_url | safe }}],
+	preserveViewport: true,
+        prefixUrl: "{{ url_for('static', filename='images/') }}",
+        showNavigator: true,
+	showHomeControl: false,
+	showFullPageControl: false,
+	showReferenceStrip: true,
+	referenceStripSizeRatio: 0.05,
+//        showRotationControl: true,
+        animationTime: 0.5,
+        blendTime: 0.1,
+        constrainDuringPan: true,
+        maxZoomPixelRatio: 2,
+        minZoomLevel: 1,
+        visibilityRatio: 1,
+        zoomPerScroll: 2,
+        timeout: 120000,
+	overlays: [{
+		px: 5000,
+		py: 5000,
+		width: 5000,
+		height: 5000,
+		id: 'thresh_overlay'
+	}]
+    });
+    viewer.addHandler("open", function() {
+        // To improve load times, ignore the lowest-resolution Deep Zoom
+        // levels.  This is a hack: we can't configure the minLevel via
+        // OpenSeadragon configuration options when the viewer is created
+        // from DZI XML.
+        viewer.source.minLevel = 8;
+    });
+    dialog = $("#change_input").dialog({
+	position: {
+		my: "left middle",
+		at: "left middle",
+		of: "canvas"},
+	autoOpen: false,
+	});
+    //dialog.css("background-color","white");
+    form = dialog.find("form").on("submit",function(event) {
+	event.preventDefault();
+	});
+    dialog.find("input").attr('size',3);
+    $("#thresh_overlay").css("background-color","transparent");
+    $("#thresh_overlay_butt").button().on("click",function() {
+	dialog.dialog("open");
+    });
+    $("#set_butt").button().on("click",function() {
+	url=viewer.source.tilesUrl.split('/');
+	if (url[4] == "thresholded") {
+		url.splice(4,4);
+	} else {
+		url.splice(4,0,"thresholded",$("#rmin").val()+":"+$("#rmax").val(),$("#gmin").val()+":"+$("#gmax").val(),$("#bmin").val()+":"+$("#bmax").val());
+	}
+	viewer.source.tilesUrl=url.join("/");   
+	viewer.drawer.reset();
+	viewer.drawer.update();
+    });
+	
+});
+</script>
