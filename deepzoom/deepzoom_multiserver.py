@@ -141,9 +141,12 @@ def dzi(path):
 
 @app.route('/t')
 def testing():
-    files_in_dir=os.listdir('/usr/local/OpenSlideServe/data/CarlZeiss/TilOysteinAnalyse')
-    os_files=sorted([x for x in files_in_dir if OpenSlide.detect_format('/usr/local/OpenSlideServe/data/CarlZeiss/TilOysteinAnalyse/'+x)])
-    file_names=",".join(["\"/CarlZeiss/TilOysteinAnalyse/" + x + ".dzi\"" for x in os_files])
+    absPath="/usr/local/OpenSlideServe/data/"
+    subPath="CarlZeiss/TilOysteinAnalyse/"
+    fulPath=absPath+subPath
+    files_in_dir=os.listdir(fulPath)
+    os_files=sorted([x for x in files_in_dir if OpenSlide.detect_format(fulPath+x)])
+    file_names=",".join(["\"/" + subPath + x + ".dzi\"" for x in os_files])
     return render_template('slide-fullpage.html',slide_url=file_names,slide_filename="Testers")
 
 

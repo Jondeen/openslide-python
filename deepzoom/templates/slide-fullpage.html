@@ -20,7 +20,6 @@ div#view {
 </style>
 
 <div id="view"></div>
-<div id="thresh_overlay"><button id="thresh_overlay_butt">Click me!</button></div>
 <div id="change_input">
 	<form action="#" method="get">
 		<table>
@@ -55,14 +54,7 @@ $(document).ready(function() {
         minZoomLevel: 1,
         visibilityRatio: 1,
         zoomPerScroll: 2,
-        timeout: 120000,
-	overlays: [{
-		px: 5000,
-		py: 5000,
-		width: 5000,
-		height: 5000,
-		id: 'thresh_overlay'
-	}]
+        timeout: 120000
     });
     viewer.addHandler("open", function() {
         // To improve load times, ignore the lowest-resolution Deep Zoom
@@ -71,22 +63,9 @@ $(document).ready(function() {
         // from DZI XML.
         viewer.source.minLevel = 8;
     });
-    dialog = $("#change_input").dialog({
-	position: {
-		my: "left middle",
-		at: "left middle",
-		of: "canvas"},
-	autoOpen: false,
-	});
+    dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} });
     //dialog.css("background-color","white");
-    form = dialog.find("form").on("submit",function(event) {
-	event.preventDefault();
-	});
     dialog.find("input").attr('size',3);
-    $("#thresh_overlay").css("background-color","transparent");
-    $("#thresh_overlay_butt").button().on("click",function() {
-	dialog.dialog("open");
-    });
     $("#set_butt").button().on("click",function() {
 	url=viewer.source.tilesUrl.split('/');
 	if (url[4] == "thresholded") {
