@@ -4,6 +4,7 @@ __pycache__/
 
 data/
 Z_Disregard/
+openslide/
 
 # C extensions
 *.so
