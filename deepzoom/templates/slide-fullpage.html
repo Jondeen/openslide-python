@@ -66,6 +66,9 @@ $(document).ready(function() {
     dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} });
     //dialog.css("background-color","white");
     dialog.find("input").attr('size',3);
+    dialog.find("form").submit(function(event){
+	event.preventDefault();
+    });
     $("#set_butt").button().on("click",function() {
 	url=viewer.source.tilesUrl.split('/');
 	if (url[4] == "thresholded") {
