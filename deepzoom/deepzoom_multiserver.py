@@ -28,6 +28,9 @@ from optparse import OptionParser
 from threading import Lock
 from PIL import Image, ImageMath
 import Thresholding as T
+from werkzeug.routing import IntegerConverter as BaseIntegerConverter
+
+
 
 SLIDE_DIR = '.'
 SLIDE_CACHE_SIZE = 10
@@ -41,6 +44,10 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('DEEPZOOM_MULTISERVER_SETTINGS', silent=True)
 
+class IntegerConverter(BaseIntegerConverter):
+  # Fix to enable negative (inverted) thresholds.
+  regex = r'-?\d+'
+app.url_map.converters['int'] = IntegerConverter
 
 class PILBytesIO(BytesIO):
     def fileno(self):

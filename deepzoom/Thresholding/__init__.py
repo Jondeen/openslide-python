@@ -14,7 +14,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 from PIL import Image, ImageMath
-import cv2, numpy, math, os
+import cv2, numpy, math, os, copy
 
 A=0
 B=1
@@ -91,9 +91,11 @@ class Thresholder():
       u=self.bounds[U][i]
       l=self.bounds[L][i]
       if l < 0 or u < 0:
-        l=math.abs(l)
-        u=math.abs(u)
-        self.inverted_bounds[i] = True
+        l=abs(l)
+        u=abs(u)
+        self.inverts[i] = True
+      else:
+        self.inverts[i] = False
       upper.append(u)
       lower.append(l)
     upper=numpy.array(upper,dtype=numpy.uint8)
@@ -106,18 +108,20 @@ class Thresholder():
     elif False not in self.inverts:
       returnImage = cv2.bitwise_not(cv2.inRange(image, lower, upper))
     else:
-      pos_check = self.bounds.copy()
-      neg_check = self.bounds.copy()
-      for i,b in pos_check:
+      pos_check = copy.deepcopy(self.bounds)
+      neg_check = copy.deepcopy(self.bounds)
+      for i,b in enumerate(self.inverts):
         if self.inverts[i] is True:
-          pos_check[i][MAX]=255
-          pos_check[i][MIN]=0
+          pos_check[U][i]=255
+          pos_check[L][i]=0
         else:
-          neg_check[i][MAX]=255
-          neg_check[i][MIN]=0
-      nots=cv2.inRange(image, neg_check[U], neg_check[L])
-      yeses=cv2.inRange(image, pos_check[U], pos_check[L])
-      returnImage = cv2.bitwise_not(nots, dst=yeses, mask=yeses)
+          neg_check[U][i]=255
+          neg_check[L][i]=0
+      print neg_check
+      nots=cv2.inRange(image, neg_check[L], neg_check[U])
+      yeses=cv2.inRange(image, pos_check[L], pos_check[U])
+      nots=cv2.bitwise_not(nots)
+      returnImage = cv2.bitwise_and(nots,yeses)# dst=nots, mask=nots)
     return cv_2_pil(returnImage)
     
   #def threshold_pixel(self,pixel):
