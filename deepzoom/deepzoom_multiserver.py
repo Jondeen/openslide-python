@@ -27,6 +27,7 @@ import os
 from optparse import OptionParser
 from threading import Lock
 from PIL import Image, ImageMath
+import Thresholding as T
 
 SLIDE_DIR = '.'
 SLIDE_CACHE_SIZE = 10
@@ -150,12 +151,12 @@ def testing():
     return render_template('slide-fullpage.html',slide_url=file_names,slide_filename="Testers")
 
 
-@app.route('/<path:path>_files/thresholded/<int:Rmin>:<int:Rmax>/<int:Gmin>:<int:Gmax>/<int:Bmin>:<int:Bmax>/<int:level>/<int:col>_<int:row>.<format>')
-def tile_thresh(path, Rmin,Rmax,Gmin,Gmax,Bmin,Bmax,level, col, row, format):
-    return tile(path,level,col,row,format,thresholds=[(Rmin,Rmax),(Gmin,Gmax),(Bmin,Bmax)])
+@app.route('/<path:path>_files/thresholded/<string:method>/<int:Rmin>:<int:Rmax>/<int:Gmin>:<int:Gmax>/<int:Bmin>:<int:Bmax>/<int:level>/<int:col>_<int:row>.<format>')
+def tile_thresh(path, method,Rmin,Rmax,Gmin,Gmax,Bmin,Bmax,level, col, row, format):
+    return tile(path,level,col,row,format,method=method,thresholds=[(Rmin,Rmax),(Gmin,Gmax),(Bmin,Bmax)])
 
 @app.route('/<path:path>_files/<int:level>/<int:col>_<int:row>.<format>')
-def tile(path, level, col, row, format,thresholds=None):
+def tile(path, level, col, row, format,thresholds=None,method=None):
     slide = _get_slide(path)
     format = format.lower()
     if format != 'jpeg' and format != 'png':
@@ -167,8 +168,9 @@ def tile(path, level, col, row, format,thresholds=None):
         # Invalid level or coordinates
         abort(404)
     buf = PILBytesIO()
-    if thresholds is not None:
-	tile=doChange(tile,thresholds)
+    if thresholds is not None and method is not None:
+      print "Thresholding!"
+      tile=T.Thresholder(thresholds,"rgb",method).threshold_image(tile)
     tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
@@ -177,8 +179,8 @@ def tile(path, level, col, row, format,thresholds=None):
 def doChange(this_tile,thresholds):
     r,g,b = this_tile.split()
     def gt_lt(c,thresh):
-	lt,gt=thresh;
-        return c.point(lambda j: j < gt and j > lt and 255)
+      lt,gt=thresh
+      return c.point(lambda j: j < gt and j > lt and 255)
     R,G,B=0,1,2
     r=gt_lt(r,thresholds[R])
     g=gt_lt(g,thresholds[G])

@@ -17,17 +17,27 @@ div#view {
     background-color: black;
     color: white;
 }
+
 </style>
 
 <div id="view"></div>
 <div id="change_input">
 	<form action="#" method="get">
 		<table>
-			<tr><td>Red:</td><td><input type="text" name="rmin" id="rmin" value="141"/><input type="text" name="rmax" id="rmax" value="228"/><br /></tr>
-			<tr><td>Green:</td><td><input type="text" name="gmin" id="gmin" value="0"/><input type="text" name="gmax" id="gmax" value="150"/><br /></tr>
+			<tr><td>Red:</td><td><input type="text" name="rmin" id="rmin" value="141"/><input type="text" name="rmax" id="rmax" value="228"/></td></tr>
+			<tr><td>Green:</td><td><input type="text" name="gmin" id="gmin" value="0"/><input type="text" name="gmax" id="gmax" value="150"/></td></tr>
 			<tr><td>Blue:</td><td><input type="text" name="bmin" id="bmin" value="61"/><input type="text" name="bmax" id="bmax" value="208"/></td></tr>
 		</table>
-		<button id="set_butt">Toggle threshold</button>
+    <select name="method" id="method">
+      <option selected="selected">RGB</option>
+      <option>HLS</option>
+      <option>HSV</option>
+      <option>LAB</option>
+      <option>LUV</option>
+      <option>XYZ</option>
+    </select>
+<input type="checkbox" id="sett_butt"><label for="sett_butt">Thresholded</label>
+		<button id="upd_butt">Refresh</button>
 	</form>
 </div>
 <link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui.css') }}">
@@ -35,6 +45,19 @@ div#view {
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
 <script type="text/javascript">
+originalSource="";
+function refreshTiles(viewer) {
+	method=$("#method")[0].selectedOptions[0].innerHTML;
+		url = originalSource.split("/");
+	if ($("#sett_butt")[0].checked) {
+		url.splice(4,0,"thresholded",method,$("#rmin").val()+":"+$("#rmax").val(),$("#gmin").val()+":"+$("#gmax").val(),$("#bmin").val()+":"+$("#bmax").val());
+	}
+	viewer.source.tilesUrl=url.join("/");   
+	viewer.drawer.reset();
+	viewer.drawer.update();
+}
+	
+
 $(document).ready(function() {
     var viewer = new OpenSeadragon({
         id: "view",
@@ -57,29 +80,32 @@ $(document).ready(function() {
         timeout: 120000
     });
     viewer.addHandler("open", function() {
+	originalSource=viewer.source.tilesUrl;
         // To improve load times, ignore the lowest-resolution Deep Zoom
         // levels.  This is a hack: we can't configure the minLevel via
         // OpenSeadragon configuration options when the viewer is created
         // from DZI XML.
         viewer.source.minLevel = 8;
     });
-    dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} });
+    dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} }).addClass( "no-close" );
     //dialog.css("background-color","white");
     dialog.find("input").attr('size',3);
     dialog.find("form").submit(function(event){
 	event.preventDefault();
     });
-    $("#set_butt").button().on("click",function() {
-	url=viewer.source.tilesUrl.split('/');
-	if (url[4] == "thresholded") {
-		url.splice(4,4);
-	} else {
-		url.splice(4,0,"thresholded",$("#rmin").val()+":"+$("#rmax").val(),$("#gmin").val()+":"+$("#gmax").val(),$("#bmin").val()+":"+$("#bmax").val());
-	}
-	viewer.source.tilesUrl=url.join("/");   
-	viewer.drawer.reset();
-	viewer.drawer.update();
+    //$("#method").selectmenu().addClass( "overflow" );;
+	//$("#sett_butt").button();
+    $("#sett_butt").on("change",function() {
+		refreshTiles(viewer);
     });
+    $("#method").on("change",function() {
+		refreshTiles(viewer); 
+    });
+    //$("#upd_butt").button();
+    $("#upd_butt").on("click",function() {
+		refreshTiles(viewer); 
+    });
+	$("#change_input option,select,input,td,label,span,button").css('font-size', '12px');
 	
 });
 </script>
