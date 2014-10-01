@@ -52,6 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+<<<<<<< HEAD
 
 Z_Disregard/
 data/
+=======
+>>>>>>> 1e2a4f2eee43a7840cd277d98abab2da38de0375
