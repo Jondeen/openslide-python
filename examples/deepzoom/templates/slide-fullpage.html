@@ -18,19 +18,91 @@ div#view {
     color: white;
 }
 </style>
-
 <div id="view"></div>
-
+<div id="change_input">
+	<form action="#" method="get">
+		<div id="wrapper">
+			<div class="thresholdselector" id="channel1">
+			
+				<div class="channel-name"></div>
+				<span class="inverting"><input type="checkbox"></span>
+				<div class="channel-slider RGB"></div>
+				<span class="channel-value"></span>
+			</div>
+			<div class="thresholdselector" id="channel2">
+				<div class="channel-name"></div>
+				<span class="inverting"><input type="checkbox"></span>
+				<div class="channel-slider RGB"></div>
+				<span class="channel-value"></span>
+			</div>
+			<div class="thresholdselector" id="channel3">
+				<div class="channel-name"></div>
+				<span class="inverting"><input type="checkbox"></span>
+				<div class="channel-slider RGB"></div>
+				<span class="channel-value"></span>
+			</div>
+		</div>
+    <select name="method" id="method">
+      <option selected="selected">RGB</option>
+      <option>HLS</option>
+      <option>HSV</option>
+      <option>LAB</option>
+      <option>LUV</option>
+      <option>XYZ</option>
+    </select>
+<input type="checkbox" id="sett_butt"><label for="sett_butt">Thresholded</label>
+		<button id="upd_butt">Refresh</button>
+	</form>
+</div>
+<link rel="stylesheet" href="{{ url_for('static', filename='thresholding-sliders.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
 <script type="text/javascript">
+originalSource="";
+lastMethod="RGB";
+function refreshTiles(viewer) {
+	a=$("#channel1 .channel-slider").slider("values");
+	b=$("#channel2 .channel-slider").slider("values");
+	c=$("#channel3 .channel-slider").slider("values");
+	if ($("#channel1 .inverting input")[0].checked) {
+		a[0] *= -1;
+		a[1] *= -1;
+	}
+	a=a.join(":");
+	if ($("#channel2 .inverting input")[0].checked) {
+		b[0] *= -1;
+		b[1] *= -1;
+	}
+	b=b.join(":");
+	if ($("#channel3 .inverting input")[0].checked) {
+		c[0] *= -1;
+		c[1] *= -1;
+	}
+	c=c.join(":");
+	method=$("#method")[0].selectedOptions[0].innerHTML;
+		url = originalSource.split("/");
+	if ($("#sett_butt")[0].checked) {
+		url.splice(4,0,"thresholded",method,a,b,c);
+	}
+	viewer.source.tilesUrl=url.join("/");   
+	viewer.drawer.reset();
+	viewer.drawer.update();
+}
+
 $(document).ready(function() {
     var viewer = new OpenSeadragon({
         id: "view",
-        tileSources: "{{ slide_url }}",
+        tileSources: [{{ slide_url | safe }}],
+	preserveViewport: true,
         prefixUrl: "{{ url_for('static', filename='images/') }}",
         showNavigator: true,
-        showRotationControl: true,
+	showHomeControl: false,
+	showFullPageControl: false,
+	showReferenceStrip: true,
+	referenceStripSizeRatio: 0.05,
+//        showRotationControl: true,
         animationTime: 0.5,
         blendTime: 0.1,
         constrainDuringPan: true,
@@ -38,14 +110,53 @@ $(document).ready(function() {
         minZoomLevel: 1,
         visibilityRatio: 1,
         zoomPerScroll: 2,
-        timeout: 120000,
+        timeout: 120000
     });
     viewer.addHandler("open", function() {
+	originalSource=viewer.source.tilesUrl;
         // To improve load times, ignore the lowest-resolution Deep Zoom
         // levels.  This is a hack: we can't configure the minLevel via
         // OpenSeadragon configuration options when the viewer is created
         // from DZI XML.
         viewer.source.minLevel = 8;
     });
+    dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} }).addClass( "no-close" );
+    //dialog.css("background-color","white");
+    dialog.find("input").attr('size',3);
+    dialog.find("form").submit(function(event){
+	event.preventDefault();
+    });
+    //$("#method").selectmenu().addClass( "overflow" );;
+	//$("#sett_butt").button();
+    $("#sett_butt").on("change",function() {
+		refreshTiles(viewer);
+    });
+	$("#change_input .channel-slider").slider({
+		range: true,
+		min: 0,
+		max: 255,
+		values:[0,255],
+		slide: function( event, ui ) {
+		this.nextElementSibling.innerHTML = ui.values[0] + " - " + ui.values[ 1 ];
+      }});
+	$("#change_input .channel-slider").css("margin-right","65px").css("margin-left","30px");
+	$("#change_input .inverting").css("float","left")
+									 .css("margin-left","0px")
+									 .css("margin-top","-4px");
+	$("#change_input .channel-value").css("float","right")
+									 .css("margin-top","-16px");
+    $("#change_input .ui-slider-range").css({opacity:0.75});
+    $("#method").on("change",function() {
+		refreshTiles(viewer); 
+		$("#change_input .channel-slider").removeClass(lastMethod)
+		$("#change_input .channel-slider").addClass($("#method")[0].selectedOptions[0].innerHTML)
+		lastMethod = $("#method")[0].selectedOptions[0].innerHTML;
+    });
+    //$("#upd_butt").button();
+    $("#upd_butt").on("click",function() {
+		refreshTiles(viewer); 
+    });
+	$("#change_input option,select,input,td,label,span,button").css('font-size', '12px');
+	
 });
 </script>
