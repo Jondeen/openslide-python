@@ -5,6 +5,7 @@ __pycache__/
 data/
 Z_Disregard/
 openslide/
+.LabelsAndSuch/
 
 # C extensions
 *.so
