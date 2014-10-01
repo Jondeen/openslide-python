@@ -14,7 +14,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 from PIL import Image, ImageMath
-import cv2, numpy, math, os
+import cv2, numpy, math, os, copy
 
 A=0
 B=1
@@ -27,10 +27,11 @@ L=1
 
 class Thresholder():
   """Class for performing thresholding and/or conversions."""
-  _thresholds=[]
-  bounds=[[],[]]
-  inverts=[False,False,False]
-  conversion_factor = None
+  # _thresholds=[]
+  # bounds=[[],[]]
+  # conversion_factor = None
+  # neg_test = False
+  # pos_test = False
   
   def __init__(self,thresholds,from_cs="rgb",to_cs="rgb"):
     """Instantiates a new thresholding engine.
@@ -62,67 +63,82 @@ class Thresholder():
     upper=(thresholds[A][MAX],thresholds[B][MAX],thresholds[C][MAX])
     lower=(thresholds[A][MIN],thresholds[B][MIN],thresholds[C][MIN])
     self.bounds=(upper,lower)
-    
-  def threshold_image(self,image):
-    """Performs thresholding on a whole image.
-
-    Args:
-      image: One of either formats below:
-          PIL
-          (numpy array) todo
-          (cv-image) todo
-    
-    Returns:
-      The thresholded image as PIL (8bit) image,
-      with positive bits set to 255 and false to 0.
-    """
-    
-    # TODO(jonas) Implement test for cv, test for numpy.
-    
-    image=pil_2_cv(image) # Still RGB, not BGR.
-    
-    if self.conversion_factor is not None:
-      image = cv2.cvtColor(image,self.conversion_factor)
-      print "Using %s" % self.conversion_factor
-    
-    upper=[]
+    upper = []
     lower = []
+    self.inverts=[]
+    
+    # TODO(jonas): Optimize iterations
     for i in range(3):
       u=self.bounds[U][i]
       l=self.bounds[L][i]
       if l < 0 or u < 0:
-        l=math.abs(l)
-        u=math.abs(u)
-        self.inverted_bounds[i] = True
+        l=abs(l)
+        u=abs(u)
+        self.inverts.append(True)
+      else:
+        self.inverts.append(False)
       upper.append(u)
       lower.append(l)
     upper=numpy.array(upper,dtype=numpy.uint8)
     lower=numpy.array(lower,dtype=numpy.uint8)
     self.bounds=[upper,lower]
     
-    returnImage = None
-    if True not in self.inverts:
-      returnImage = cv2.inRange(image, lower, upper)
-    elif False not in self.inverts:
-      returnImage = cv2.bitwise_not(cv2.inRange(image, lower, upper))
-    else:
-      pos_check = self.bounds.copy()
-      neg_check = self.bounds.copy()
-      for i,b in pos_check:
+    if (True in self.inverts and False in self.inverts):
+      self.pos_test = copy.deepcopy(self.bounds)
+      self.neg_test = copy.deepcopy(self.bounds)
+      for i,b in enumerate(self.inverts):
         if self.inverts[i] is True:
-          pos_check[i][MAX]=255
-          pos_check[i][MIN]=0
+          self.pos_test[U][i]=255
+          self.pos_test[L][i]=0
         else:
-          neg_check[i][MAX]=255
-          neg_check[i][MIN]=0
-      nots=cv2.inRange(image, neg_check[U], neg_check[L])
-      yeses=cv2.inRange(image, pos_check[U], pos_check[L])
-      returnImage = cv2.bitwise_not(nots, dst=yeses, mask=yeses)
-    return cv_2_pil(returnImage)
+          self.neg_test[U][i]=255
+          self.neg_test[L][i]=0
     
-  #def threshold_pixel(self,pixel):
-  # TODO(jonas) implement
-  
+  def threshold_image(self,image):   
+    """Performs thresholding on a whole image.
+
+    Args:
+      image: One of either formats below:
+          PIL (as RGB)
+          (numpy array) todo
+          (cv-image) todo
+    
+    Returns:
+      The thresholded image as PIL (RGB) image,
+      with positive bits set to 255 and false to 0.
+    """
+    
+    
+    image=self.pil_2_cv(image) # Still RGB, not BGR.
+    backup=image.copy()
+    
+    if self.conversion_factor is not None:
+      image = cv2.cvtColor(image,self.conversion_factor)
+      print "Using %s" % self.conversion_factor
+    
+    if True not in self.inverts:        # No inverted tests
+      mask = cv2.inRange(image, self.bounds[L], self.bounds[U])
+    elif False not in self.inverts:     # All inverted tests
+      negMask=cv2.inRange(image, self.bounds[L], self.bounds[U])
+      mask = cv2.bitwise_not(negMask)
+    else:                               # Mix inverted and non-inverted
+      nots=cv2.inRange(image, self.neg_test[L], self.neg_test[U])
+      yeses=cv2.inRange(image, self.pos_test[L], self.pos_test[U])
+      nots=cv2.bitwise_not(nots)
+      mask = cv2.bitwise_and(nots,yeses)
+    mask = cv2.cvtColor(mask,cv2.COLOR_GRAY2RGB)
+    mask= cv2.bitwise_not(mask)
+    im=cv2.min(backup,mask)
+    print im.shape
+    return self.cv_2_pil(im).copy()
+    
+  def cv_2_pil(self,image):
+    # Converts cv-image to PIL.
+    return Image.fromarray(image)
+    
+  def pil_2_cv(self,image):
+    return numpy.array(image)
+      
   def _check_cs_conversion(self,from_cs,to_cs):
     """Checks if conversion between from/to is possible.
     
@@ -136,10 +152,3 @@ class Thresholder():
     if "COLOR_%s2%s" % (from_cs,to_cs) in dir(cv2):
       return eval("cv2.COLOR_%s2%s" % (from_cs,to_cs))
       
-def cv_2_pil(image):
-  # Converts cv-image to PIL. One channel!
-  return Image.fromarray(image)
-  
-def pil_2_cv(image):
-  # Converts PIL-image to numpy array (for cv). Still RGB.
-  return numpy.array(image)
