@@ -19,7 +19,7 @@
 #
 
 from collections import OrderedDict
-from flask import Flask, abort, make_response, render_template, url_for
+from flask import Flask, abort, make_response, render_template, url_for, session
 from io import BytesIO
 from openslide import OpenSlide, OpenSlideError
 from openslide.deepzoom import DeepZoomGenerator
@@ -30,7 +30,10 @@ from PIL import Image, ImageMath
 import Thresholding as T
 from werkzeug.routing import IntegerConverter as BaseIntegerConverter
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> development
 
 SLIDE_DIR = '.'
 SLIDE_CACHE_SIZE = 10
@@ -48,12 +51,15 @@ class IntegerConverter(BaseIntegerConverter):
   # Fix to enable negative (inverted) thresholds.
   regex = r'-?\d+'
 app.url_map.converters['int'] = IntegerConverter
+<<<<<<< HEAD
+=======
+
+>>>>>>> development
 
 class PILBytesIO(BytesIO):
     def fileno(self):
         '''Classic PIL doesn't understand io.UnsupportedOperation.'''
         raise AttributeError('Not supported')
-
 
 class _SlideCache(object):
     def __init__(self, cache_size, dz_opts):
@@ -76,7 +82,6 @@ class _SlideCache(object):
                     self._cache.popitem(last=False)
                 self._cache[path] = slide
         return slide
-
 
 class _Directory(object):
     def __init__(self, basedir, relpath=''):
@@ -176,8 +181,8 @@ def tile(path, level, col, row, format,thresholds=None,method=None):
         abort(404)
     buf = PILBytesIO()
     if thresholds is not None and method is not None:
-      print "Thresholding!"
-      tile=T.Thresholder(thresholds,"rgb",method).threshold_image(tile)
+      thresholder = T.Thresholder(thresholds,"rgb",method)
+      tile=thresholder.threshold_image(tile)
     tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
