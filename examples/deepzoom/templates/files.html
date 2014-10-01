@@ -1,5 +1,5 @@
 <!doctype html>
-<title>Available Slides</title>
+<title>Test images</title>
 
 <style type="text/css">
 li {
@@ -11,7 +11,7 @@ li.none {
 }
 </style>
 
-<h1>Available Slides</h1>
+<h1>Test Images</h1>
 
 <ul>
     {% for entry in root_dir.children recursive %}
@@ -20,6 +20,12 @@ li.none {
                 <a href="{{ url_for('slide', path=entry.url_path) }}">
                     {{ entry.name }}
                 </a>
+                {% if entry.name.find('.mrxs') == -1 %}
+		&nbsp;
+                (<a href="{{ url_for('static', filename='data/'+entry.url_path) }}">
+                   Download original
+                </a>)
+                {% endif %}
             {% else %}
                 {{ entry.name }}
             {% endif %}
