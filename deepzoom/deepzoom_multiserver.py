@@ -30,10 +30,6 @@ from PIL import Image, ImageMath
 import Thresholding as T
 from werkzeug.routing import IntegerConverter as BaseIntegerConverter
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 
 SLIDE_DIR = '.'
 SLIDE_CACHE_SIZE = 10
@@ -51,10 +47,7 @@ class IntegerConverter(BaseIntegerConverter):
   # Fix to enable negative (inverted) thresholds.
   regex = r'-?\d+'
 app.url_map.converters['int'] = IntegerConverter
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 
 class PILBytesIO(BytesIO):
     def fileno(self):
