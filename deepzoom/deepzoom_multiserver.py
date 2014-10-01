@@ -31,7 +31,10 @@ import Thresholding as T
 from werkzeug.routing import IntegerConverter as BaseIntegerConverter
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> development
 =======
 >>>>>>> development
 
@@ -52,6 +55,10 @@ class IntegerConverter(BaseIntegerConverter):
   regex = r'-?\d+'
 app.url_map.converters['int'] = IntegerConverter
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> development
 =======
 
 >>>>>>> development

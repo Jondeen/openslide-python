@@ -117,6 +117,7 @@ class Thresholder():
       print "Using %s" % self.conversion_factor
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     upper=[]
     lower = []
     for i in range(3):
@@ -156,6 +157,8 @@ class Thresholder():
       returnImage = cv2.bitwise_and(nots,yeses)# dst=nots, mask=nots)
     return cv_2_pil(returnImage)
 =======
+=======
+>>>>>>> development
     if True not in self.inverts:        # No inverted tests
       mask = cv2.inRange(image, self.bounds[L], self.bounds[U])
     elif False not in self.inverts:     # All inverted tests
@@ -175,6 +178,9 @@ class Thresholder():
   def cv_2_pil(self,image):
     # Converts cv-image to PIL.
     return Image.fromarray(image)
+<<<<<<< HEAD
+>>>>>>> development
+=======
 >>>>>>> development
     
   def pil_2_cv(self,image):
