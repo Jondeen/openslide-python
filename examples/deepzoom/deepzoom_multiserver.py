@@ -27,12 +27,12 @@ import os
 from optparse import OptionParser
 from threading import Lock
 from PIL import Image, ImageMath
-import Thresholding as T
+import Thresholding as T, numpy as np
 from werkzeug.routing import IntegerConverter as BaseIntegerConverter
 
 
 SLIDE_DIR = '.'
-SLIDE_CACHE_SIZE = 10
+SLIDE_CACHE_SIZE = 15
 DEEPZOOM_FORMAT = 'jpeg'
 DEEPZOOM_TILE_SIZE = 256
 DEEPZOOM_OVERLAP = 1
@@ -76,6 +76,32 @@ class _SlideCache(object):
                 self._cache[path] = slide
         return slide
 
+class _ThresholdCache(object):
+    def __init__(self, cache_size):
+        self.cache_size = cache_size
+        self._lock = Lock()
+        self._cache = OrderedDict()
+
+    def get(self, thresholds,in_format,method):
+        path="%s-%s"%(in_format,method)
+        for i in range(3):
+          for j in range(2):
+            path+="-%d" % thresholds[i][j]
+        print path
+        with self._lock:
+            if path in self._cache:
+                # Move to end of LRU
+                thresholder = self._cache.pop(path)
+                self._cache[path] = thresholder
+                return thresholder
+        thresholder = T.Thresholder(thresholds,"rgb",method)
+        with self._lock:
+            if path not in self._cache:
+                if len(self._cache) == self.cache_size:
+                    self._cache.popitem(last=False)
+                self._cache[path] = thresholder
+        return thresholder
+
 class _Directory(object):
     def __init__(self, basedir, relpath=''):
         self.name = os.path.basename(relpath)
@@ -107,6 +133,7 @@ def _setup():
     }
     opts = dict((v, app.config[k]) for k, v in config_map.items())
     app.cache = _SlideCache(app.config['SLIDE_CACHE_SIZE'], opts)
+    app.threshold_cache = _ThresholdCache(app.config['SLIDE_CACHE_SIZE'])
 
 
 def _get_slide(path):
@@ -174,6 +201,7 @@ def tile(path, level, col, row, format,thresholds=None,method=None):
         abort(404)
     buf = PILBytesIO()
     if thresholds is not None and method is not None:
+      w,h=tile.size
       thresholder = T.Thresholder(thresholds,"rgb",method)
       tile=thresholder.threshold_image(tile)
     tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])

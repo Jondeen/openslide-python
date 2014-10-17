@@ -27,13 +27,8 @@ L=1
 
 class Thresholder():
   """Class for performing thresholding and/or conversions."""
-  # _thresholds=[]
-  # bounds=[[],[]]
-  # conversion_factor = None
-  # neg_test = False
-  # pos_test = False
   
-  def __init__(self,thresholds,from_cs="rgb",to_cs="rgb"):
+  def __init__(self,thresholds,from_cs="rgb",to_cs="rgb",debug=False):
     """Instantiates a new thresholding engine.
 
     Args:
@@ -56,18 +51,31 @@ class Thresholder():
       A new Thresholding object.
     """
     
+    if debug:
+      print "Instantiating new thresholder"
+    self.debug = debug
+    
     self._thresholds=thresholds
     from_cs=from_cs.upper()
     to_cs=to_cs.upper()
+    self.from_cs=from_cs
+    self.to_cs=to_cs
     self.conversion_factor = self._check_cs_conversion(from_cs,to_cs)
-    upper=(thresholds[A][MAX],thresholds[B][MAX],thresholds[C][MAX])
-    lower=(thresholds[A][MIN],thresholds[B][MIN],thresholds[C][MIN])
+        
+    upper=[thresholds[A][MAX],thresholds[B][MAX],thresholds[C][MAX]]
+    lower=[thresholds[A][MIN],thresholds[B][MIN],thresholds[C][MIN]]
+    if self.to_cs=="HSV" or self.to_cs=="HLS":
+      upper[0] = int(upper[0]*180.0/255.0)
+      lower[0] = int(lower[0]*180.0/255.0)
     self.bounds=(upper,lower)
+    
+    if debug:
+      print "Bounds before inversion testing:"
+      print self.bounds
     upper = []
     lower = []
     self.inverts=[]
     
-    # TODO(jonas): Optimize iterations
     for i in range(3):
       u=self.bounds[U][i]
       l=self.bounds[L][i]
@@ -79,20 +87,8 @@ class Thresholder():
         self.inverts.append(False)
       upper.append(u)
       lower.append(l)
-    upper=numpy.array(upper,dtype=numpy.uint8)
-    lower=numpy.array(lower,dtype=numpy.uint8)
-    self.bounds=[upper,lower]
-    
-    if (True in self.inverts and False in self.inverts):
-      self.pos_test = copy.deepcopy(self.bounds)
-      self.neg_test = copy.deepcopy(self.bounds)
-      for i,b in enumerate(self.inverts):
-        if self.inverts[i] is True:
-          self.pos_test[U][i]=255
-          self.pos_test[L][i]=0
-        else:
-          self.neg_test[U][i]=255
-          self.neg_test[L][i]=0
+    self.lower=lower
+    self.upper=upper
     
   def threshold_image(self,image):   
     """Performs thresholding on a whole image.
@@ -107,30 +103,29 @@ class Thresholder():
       The thresholded image as PIL (RGB) image,
       with positive bits set to 255 and false to 0.
     """
-    
-    
+    debug = self.debug
+    debug=True
+    debuginfo=self.debuginfo
+    print "Thresholding..."
     image=self.pil_2_cv(image) # Still RGB, not BGR.
+    w,h,_=image.shape
+    debuginfo(image,"after initial pil2cv")
     backup=image.copy()
-    
     if self.conversion_factor is not None:
       image = cv2.cvtColor(image,self.conversion_factor)
-      print "Using %s" % self.conversion_factor
-    
-    if True not in self.inverts:        # No inverted tests
-      mask = cv2.inRange(image, self.bounds[L], self.bounds[U])
-    elif False not in self.inverts:     # All inverted tests
-      negMask=cv2.inRange(image, self.bounds[L], self.bounds[U])
-      mask = cv2.bitwise_not(negMask)
-    else:                               # Mix inverted and non-inverted
-      nots=cv2.inRange(image, self.neg_test[L], self.neg_test[U])
-      yeses=cv2.inRange(image, self.pos_test[L], self.pos_test[U])
-      nots=cv2.bitwise_not(nots)
-      mask = cv2.bitwise_and(nots,yeses)
-    mask = cv2.cvtColor(mask,cv2.COLOR_GRAY2RGB)
-    mask= cv2.bitwise_not(mask)
-    im=cv2.min(backup,mask)
-    print im.shape
-    return self.cv_2_pil(im).copy()
+      debuginfo(image,"after conversion")
+    masks = [None,None,None]
+    for i,c in enumerate(cv2.split(image)):
+      masks[i]=(c<=self.upper[i]) & (c>=self.lower[i])
+      if self.inverts[i]:
+        masks[i]=~masks[i]
+    mask=(~(masks[0]&masks[1]&masks[2]))*255
+    def print8(thinga,thingb,thingc):
+      for i in range(8):
+        print "%15d %15d %15d" % (thinga[i][0],thingb[i],thingc[i])
+    mask=cv2.cvtColor(numpy.uint8(mask),cv2.COLOR_GRAY2RGB)
+    outimage=mask&backup
+    return self.cv_2_pil(outimage)
     
   def cv_2_pil(self,image):
     # Converts cv-image to PIL.
@@ -152,3 +147,11 @@ class Thresholder():
     if "COLOR_%s2%s" % (from_cs,to_cs) in dir(cv2):
       return eval("cv2.COLOR_%s2%s" % (from_cs,to_cs))
       
+  def debuginfo(self,imageobject,atTime=""):
+    if self.debug:
+      if atTime is not "":
+        atTime = " " + atTime + ":"
+      print ""
+      print "Data type%-35s %-10s" % (atTime,imageobject.dtype)
+      print "Mean%-40s %-10s" % (atTime,imageobject.mean())
+      print "Shape%-39s %-10s" % (atTime,imageobject.shape)
