@@ -17,8 +17,16 @@ div#view {
     background-color: black;
     color: white;
 }
+  .positionable {
+	width: 400px;
+    position: absolute;
+    display: block;
+    background-color: #bcd5e6;
+    text-align: center;
+  }
 </style>
 <div id="view"></div>
+<div id="name" class="positionable"></div>
 <div id="change_input">
 	<form action="#" method="get">
 		<div id="wrapper">
@@ -103,7 +111,7 @@ $(document).ready(function() {
 	showHomeControl: false,
 	showFullPageControl: false,
 	showReferenceStrip: true,
-	referenceStripSizeRatio: 0.05,
+	referenceStripSizeRatio: 0.15,
 //        showRotationControl: true,
         animationTime: 0.5,
         blendTime: 0.1,
@@ -116,12 +124,15 @@ $(document).ready(function() {
     });
     viewer.addHandler("open", function() {
 	originalSource=viewer.source.tilesUrl;
+	$("#name")[0].innerHTML=originalSource;
+	
         // To improve load times, ignore the lowest-resolution Deep Zoom
         // levels.  This is a hack: we can't configure the minLevel via
         // OpenSeadragon configuration options when the viewer is created
         // from DZI XML.
         viewer.source.minLevel = 8;
     });
+	$("#name").position({my: "center top ", at: "center top ",of: $(".openseadragon-container")});
     dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} }).addClass( "no-close" );
     //dialog.css("background-color","white");
     dialog.find("input").attr('size',3);
