@@ -113,7 +113,8 @@ class _Directory(object):
                 cur_dir = _Directory(basedir, cur_relpath)
                 if cur_dir.children:
                     self.children.append(cur_dir)
-            elif OpenSlide.detect_format(cur_path):
+                    #elif OpenSlide.detect_format(cur_path):
+            elif os.path.splitext(cur_path)[1] in [".tiff",".tif",".mrxs"]:
                 self.children.append(_SlideFile(cur_relpath))
 
 
@@ -172,10 +173,10 @@ def dzi(path):
     resp.mimetype = 'application/xml'
     return resp
 
-@app.route('/t')
-def testing():
+@app.route('/t/<string:foldername>')
+def testing(foldername):
     absPath="/usr/local/OpenSlideServe/data/"
-    subPath="CarlZeiss/TilOysteinAnalyse/"
+    subPath="CarlZeiss/%s/" % (foldername)
     fulPath=absPath+subPath
     files_in_dir=os.listdir(fulPath)
     os_files=sorted([x for x in files_in_dir if OpenSlide.detect_format(fulPath+x)])

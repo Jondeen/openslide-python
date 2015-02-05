@@ -141,7 +141,9 @@ $(document).ready(function() {
 	$("#name a").on("click",function() {
 		var c = $(".openseadragon-canvas canvas")[0];
 		var dataString = c.toDataURL("image/png");
-		window.open(dataString);
+		var d = window.open().document;
+		d.write(''); d.close();
+		d.body.appendChild(document.createElement('img')).src = dataString;
 		});
     dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} }).addClass( "no-close" );
     //dialog.css("background-color","white");
