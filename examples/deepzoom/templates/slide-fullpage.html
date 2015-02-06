@@ -35,24 +35,15 @@ div#view {
 <div id="change_input">
 	<form action="#" method="get">
 		<div id="wrapper">
-			<div class="thresholdselector" id="channel1">
-			
-				<div class="channel-name"></div>
-				<span class="inverting"><input type="checkbox"></span>
-				<div class="channel-slider RGB"></div>
-				<span class="channel-value"></span>
-			</div>
-			<div class="thresholdselector" id="channel2">
-				<div class="channel-name"></div>
-				<span class="inverting"><input type="checkbox"></span>
-				<div class="channel-slider RGB"></div>
-				<span class="channel-value"></span>
-			</div>
-			<div class="thresholdselector" id="channel3">
-				<div class="channel-name"></div>
-				<span class="inverting"><input type="checkbox"></span>
-				<div class="channel-slider RGB"></div>
-				<span class="channel-value"></span>
+			<div class="thresholdselector pull-to-left">
+				<span class="channel-name">&nbsp;&nbsp;&nbsp;</span>
+				<span class="inverting pull-to-left"><input type="checkbox"></span>
+				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left low-less"></span>
+				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left low-more" ></span>
+				<div class="channel-slider RGB pull-to-left""></div>
+				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left high-less"></span>
+				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left high-more" ></span>
+				<span class="channel-value">&nbsp;&nbsp;&nbsp;</span>
 			</div>
 		</div>
     <select name="method" id="method">
@@ -67,13 +58,13 @@ div#view {
 		<button id="upd_butt">Refresh</button>
 	</form>
 </div>
-<link rel="stylesheet" href="{{ url_for('static', filename='thresholding-sliders.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='tinycolor.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='tinygradient.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='thresholding-sliders.css') }}">
 <script type="text/javascript">
 originalSource="";
 lastMethod="RGB";
@@ -107,6 +98,17 @@ function refreshTiles(viewer) {
 }
 
 $(document).ready(function() {
+	var a=$(".thresholdselector");
+	a[0].id="channel1";
+	var b=a.clone();
+	b[0].id="channel2";
+	b.appendTo(a.parent());
+	var c=b.clone();
+	c[0].id="channel3";
+	c.appendTo(a.parent());
+	
+	$(".thresholdselector")
+	var threshTimer;
     var viewer = new OpenSeadragon({
         id: "view",
         tileSources: [{{ slide_url | safe }}],
@@ -145,7 +147,7 @@ $(document).ready(function() {
 		d.write(''); d.close();
 		d.body.appendChild(document.createElement('img')).src = dataString;
 		});
-    dialog = $("#change_input").dialog({ position: {my: "left middle", at: "left middle"} }).addClass( "no-close" );
+    dialog = $("#change_input").dialog({ position: {my: "left middle",at: "left middle"},	minWidth: 330}).addClass( "no-close" );
     //dialog.css("background-color","white");
     dialog.find("input").attr('size',3);
     dialog.find("form").submit(function(event){
@@ -156,20 +158,55 @@ $(document).ready(function() {
     $("#sett_butt").on("change",function() {
 		refreshTiles(viewer);
     });
+    $(".inverting input").on("change",function() {
+		if ($("#sett_butt")[0].checked) {
+				if (threshTimer) {
+					clearTimeout(threshTimer);
+				}
+					threshTimer = setTimeout(function() {
+						refreshTiles(viewer)},500);
+						}
+    });
 	$("#change_input .channel-slider").slider({
 		range: true,
 		min: 0,
 		max: 255,
 		values:[0,255],
-		slide: function( event, ui ) {
-		this.nextElementSibling.innerHTML = ui.values[0] + " - " + ui.values[ 1 ];
+		change: function( event, ui ) {
+			o=$(this).parent()
+			o.find("span.channel-value")[0].innerHTML = ui.values[0] + "-" + ui.values[ 1 ];
+			if ($("#sett_butt")[0].checked) {
+				if (threshTimer) {
+					clearTimeout(threshTimer);
+				}
+					threshTimer = setTimeout(function() {
+						refreshTiles(viewer)},500);
+			}
       }});
-	$("#change_input .channel-slider").css("margin-right","65px").css("margin-left","30px");
-	$("#change_input .inverting").css("float","left")
-									 .css("margin-left","0px")
-									 .css("margin-top","-4px");
-	$("#change_input .channel-value").css("float","right")
-									 .css("margin-top","-16px");
+	$(".high-more").on("click",function() {
+		slider=$(this).parent().find(".channel-slider");
+		values=slider.slider( "option", "values" );
+		slider.slider("option","values",[values[0],values[1]==255?255:values[1]+1]);
+		});
+	$(".high-less").on("click",function() {
+		slider=$(this).parent().find(".channel-slider");
+		values=slider.slider( "option", "values" );
+		slider.slider("option","values",[values[0],values[1]==0?0:values[1]-1]);
+		});
+	$(".low-more").on("click",function() {
+		slider=$(this).parent().find(".channel-slider");
+		values=slider.slider( "option", "values" );
+		slider.slider("option","values",[values[0]==255?255:values[0]+1,values[1]]);
+		});
+	$(".low-less").on("click",function() {
+		slider=$(this).parent().find(".channel-slider");
+		values=slider.slider( "option", "values" );
+		slider.slider("option","values",[values[0]==0?0:values[0]-1,values[1]]);
+		});
+		
+		
+		
+		
     $("#change_input .ui-slider-range").css({opacity:0.75});
     $("#method").on("change",function() {
 		refreshTiles(viewer); 
@@ -181,7 +218,6 @@ $(document).ready(function() {
     $("#upd_butt").on("click",function() {
 		refreshTiles(viewer); 
     });
-	$("#change_input option,select,input,td,label,span,button").css('font-size', '12px');
-	
+	//$("#change_input option,select,input,td,label,span,button").css('font-size', '12px');
 });
 </script>
