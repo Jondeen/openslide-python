@@ -182,7 +182,12 @@ $(document).ready(function() {
 					threshTimer = setTimeout(function() {
 						refreshTiles(viewer)},500);
 			}
-      }});
+		},
+		slide: function( event, ui ) {
+			o=$(this).parent();
+			o.find("span.channel-value")[0].innerHTML = ui.values[0] + "-" + ui.values[ 1 ];
+			}
+      });
 	$(".high-more").on("click",function() {
 		slider=$(this).parent().find(".channel-slider");
 		values=slider.slider( "option", "values" );
