@@ -210,6 +210,30 @@ def tile(path, level, col, row, format,thresholds=None,method=None):
     resp.mimetype = 'image/%s' % format
     return resp
 
+@app.route('/<path:path>_files/semi-macro/<int:w>_<int:h>.<format>')
+def thumb(path, w, h, format):
+    path = os.path.abspath(os.path.join(app.basedir, path))
+    if not path.startswith(app.basedir + os.path.sep):
+        # Directory traversal
+        abort(404)
+    if not os.path.exists(path):
+        abort(404)
+    slide = OpenSlide(path)
+    format = format.lower()
+    if format != 'jpeg' and format != 'png':
+        # Not supported by Deep Zoom
+        abort(404)
+    try:
+        tile = slide.get_thumbnail((w, h))
+    except ValueError:
+        # Invalid level or coordinates
+        abort(404)
+    buf = PILBytesIO()
+    tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
+    resp = make_response(buf.getvalue())
+    resp.mimetype = 'image/%s' % format
+    return resp
+    
 def doChange(this_tile,thresholds):
     r,g,b = this_tile.split()
     def gt_lt(c,thresh):

@@ -1,49 +1,19 @@
 <!doctype html>
 <title>{{ slide_filename }}</title>
-
-<style type="text/css">
-html {
-    overflow: hidden;
-}
-body {
-    margin: 0;
-    padding: 0;
-}
-div#view {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    color: white;
-}
-  .positionable {
-	width: 400px;
-    position: absolute;
-    display: block;
-    text-align: center;
-  }
-  div.imageArrow {
-	width:            25px;
-	height:           25px;
-	margin-left: 187.5px;
-	background-image: url('data:image/png;base64,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');
-}
-</style>
 <div id="view"></div>
-<div id="name" class="positionable"><span class="filename"></span><a href="#"><div class="imageArrow"></div></a></span></div>
-<div id="change_input">
+<div id="name" class="positionable"><span class="filename"></span></span></div>
+<div id="change_input" title="Thresholds">
 	<form action="#" method="get">
 		<div id="wrapper">
 			<div class="thresholdselector pull-to-left">
 				<span class="channel-name">&nbsp;&nbsp;&nbsp;</span>
 				<span class="inverting pull-to-left"><input type="checkbox"></span>
-				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left low-less"></span>
-				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left low-more" ></span>
+				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left low less"></span>
+				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left low more" ></span>
 				<div class="channel-slider RGB pull-to-left""></div>
-				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left high-less"></span>
-				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left high-more" ></span>
-				<span class="channel-value">&nbsp;&nbsp;&nbsp;</span>
+				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left high less"></span>
+				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left high more" ></span>
+				<span class="channel-value">0-255</span>
 			</div>
 		</div>
     <select name="method" id="method">
@@ -57,172 +27,26 @@ div#view {
 <input type="checkbox" id="sett_butt"><label for="sett_butt">Thresholded</label>
 		<button id="upd_butt">Refresh</button>
 	</form>
+	<div class="links">
+	<a href="#" id="macroFile1" class="pull-to-left">
+	Macro</a>
+	<span class="pull-to-left">&nbsp;&#x22D9;&nbsp;</span>
+	<a href="#" id="macroFile2" class="pull-to-left">
+	Macro</a>
+	<span class="pull-to-left">&nbsp;&#x226B;&nbsp;</span>
+	<a href="#" id="macroFile3" class="pull-to-left">
+	Macro</a>
+	<a href="#" id="currentFile" class="pull-to-right"><span class="pull-to-right ui-icon ui-icon-arrowthickstop-1-s"></span>
+	As shown</a>
+	</div>
 </div>
-<link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='tinycolor.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='tinygradient.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='thresholding-sliders.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='z9-t.css') }}">
 <script type="text/javascript">
-originalSource="";
-lastMethod="RGB";
-function refreshTiles(viewer) {
-	a=$("#channel1 .channel-slider").slider("values");
-	b=$("#channel2 .channel-slider").slider("values");
-	c=$("#channel3 .channel-slider").slider("values");
-	if ($("#channel1 .inverting input")[0].checked) {
-		a[0] *= -1;
-		a[1] *= -1;
-	}
-	a=a.join(":");
-	if ($("#channel2 .inverting input")[0].checked) {
-		b[0] *= -1;
-		b[1] *= -1;
-	}
-	b=b.join(":");
-	if ($("#channel3 .inverting input")[0].checked) {
-		c[0] *= -1;
-		c[1] *= -1;
-	}
-	c=c.join(":");
-	method=$("#method")[0].selectedOptions[0].innerHTML;
-		url = originalSource.split("/");
-	if ($("#sett_butt")[0].checked) {
-		url.splice(4,0,"thresholded",method,a,b,c);
-	}
-	viewer.source.tilesUrl=url.join("/");   
-	viewer.drawer.reset();
-	viewer.drawer.update();
-}
-
-$(document).ready(function() {
-	var a=$(".thresholdselector");
-	a[0].id="channel1";
-	var b=a.clone();
-	b[0].id="channel2";
-	b.appendTo(a.parent());
-	var c=b.clone();
-	c[0].id="channel3";
-	c.appendTo(a.parent());
-	
-	$(".thresholdselector")
-	var threshTimer;
-    var viewer = new OpenSeadragon({
-        id: "view",
-        tileSources: [{{ slide_url | safe }}],
-	preserveViewport: true,
-        prefixUrl: "{{ url_for('static', filename='images/') }}",
-        showNavigator: true,
-	showHomeControl: false,
-	showFullPageControl: false,
-	showReferenceStrip: true,
-	referenceStripSizeRatio: 0.15,
-//        showRotationControl: true,
-        animationTime: 0.5,
-        blendTime: 0.1,
-        constrainDuringPan: true,
-        maxZoomPixelRatio: 2,
-        minZoomLevel: 1,
-        visibilityRatio: 1,
-        zoomPerScroll: 2,
-        timeout: 120000
-    });
-    viewer.addHandler("open", function() {
-	originalSource=viewer.source.tilesUrl;
-	$("#name .filename")[0].innerHTML=originalSource;
-	
-        // To improve load times, ignore the lowest-resolution Deep Zoom
-        // levels.  This is a hack: we can't configure the minLevel via
-        // OpenSeadragon configuration options when the viewer is created
-        // from DZI XML.
-        viewer.source.minLevel = 8;
-    });
-	$("#name").position({my: "center top ", at: "center top ",of: $(".openseadragon-container")});
-	$("#name a").on("click",function() {
-		var c = $(".openseadragon-canvas canvas")[0];
-		var dataString = c.toDataURL("image/png");
-		var d = window.open().document;
-		d.write(''); d.close();
-		d.body.appendChild(document.createElement('img')).src = dataString;
-		});
-    dialog = $("#change_input").dialog({ position: {my: "left middle",at: "left middle"},	minWidth: 330}).addClass( "no-close" );
-    //dialog.css("background-color","white");
-    dialog.find("input").attr('size',3);
-    dialog.find("form").submit(function(event){
-	event.preventDefault();
-    });
-    //$("#method").selectmenu().addClass( "overflow" );;
-	//$("#sett_butt").button();
-    $("#sett_butt").on("change",function() {
-		refreshTiles(viewer);
-    });
-    $(".inverting input").on("change",function() {
-		if ($("#sett_butt")[0].checked) {
-				if (threshTimer) {
-					clearTimeout(threshTimer);
-				}
-					threshTimer = setTimeout(function() {
-						refreshTiles(viewer)},500);
-						}
-    });
-	$("#change_input .channel-slider").slider({
-		range: true,
-		min: 0,
-		max: 255,
-		values:[0,255],
-		change: function( event, ui ) {
-			o=$(this).parent()
-			o.find("span.channel-value")[0].innerHTML = ui.values[0] + "-" + ui.values[ 1 ];
-			if ($("#sett_butt")[0].checked) {
-				if (threshTimer) {
-					clearTimeout(threshTimer);
-				}
-					threshTimer = setTimeout(function() {
-						refreshTiles(viewer)},500);
-			}
-		},
-		slide: function( event, ui ) {
-			o=$(this).parent();
-			o.find("span.channel-value")[0].innerHTML = ui.values[0] + "-" + ui.values[ 1 ];
-			}
-      });
-	$(".high-more").on("click",function() {
-		slider=$(this).parent().find(".channel-slider");
-		values=slider.slider( "option", "values" );
-		slider.slider("option","values",[values[0],values[1]==255?255:values[1]+1]);
-		});
-	$(".high-less").on("click",function() {
-		slider=$(this).parent().find(".channel-slider");
-		values=slider.slider( "option", "values" );
-		slider.slider("option","values",[values[0],values[1]==0?0:values[1]-1]);
-		});
-	$(".low-more").on("click",function() {
-		slider=$(this).parent().find(".channel-slider");
-		values=slider.slider( "option", "values" );
-		slider.slider("option","values",[values[0]==255?255:values[0]+1,values[1]]);
-		});
-	$(".low-less").on("click",function() {
-		slider=$(this).parent().find(".channel-slider");
-		values=slider.slider( "option", "values" );
-		slider.slider("option","values",[values[0]==0?0:values[0]-1,values[1]]);
-		});
-		
-		
-		
-		
-    $("#change_input .ui-slider-range").css({opacity:0.75});
-    $("#method").on("change",function() {
-		refreshTiles(viewer); 
-		$("#change_input .channel-slider").removeClass(lastMethod)
-		$("#change_input .channel-slider").addClass($("#method")[0].selectedOptions[0].innerHTML)
-		lastMethod = $("#method")[0].selectedOptions[0].innerHTML;
-    });
-    //$("#upd_butt").button();
-    $("#upd_butt").on("click",function() {
-		refreshTiles(viewer); 
-    });
-	//$("#change_input option,select,input,td,label,span,button").css('font-size', '12px');
-});
+var imagePrefixURL="{{ url_for('static', filename='images/') }}";
+var tileSourcesArray=[{{ slide_url | safe }}];
 </script>
+<script type="text/javascript" src="{{ url_for('static', filename='z9-t.js') }}"></script>
