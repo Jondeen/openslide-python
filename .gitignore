@@ -5,3 +5,4 @@ data/
 /MANIFEST
 /*.egg-info
 *.pyc
+examples/deepzoom/static/experimental/
