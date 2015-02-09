@@ -70,6 +70,7 @@ $(document).ready(function() {
         showFullPageControl: false,
         showReferenceStrip: true,
         referenceStripHeight: 50,
+        referenceStripWidth: 50,
         referenceStripSizeRatio: 0.15,
         showRotationControl: true,
         animationTime: 0.5,
