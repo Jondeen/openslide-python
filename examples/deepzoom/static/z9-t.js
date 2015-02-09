@@ -78,7 +78,9 @@ $(document).ready(function() {
         minZoomLevel: 1,
         visibilityRatio: 1,
         zoomPerScroll: 2,
-        timeout: 120000
+        timeout: 120000,
+        debugMode:       true,
+        debugGridColor:  "#f9276f",
     });
 
     viewer.addHandler("open", function() {
