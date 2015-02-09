@@ -69,6 +69,7 @@ $(document).ready(function() {
         showHomeControl: false,
         showFullPageControl: false,
         showReferenceStrip: true,
+        referenceStripHeight: 50,
         referenceStripSizeRatio: 0.15,
         showRotationControl: true,
         animationTime: 0.5,
@@ -90,7 +91,7 @@ $(document).ready(function() {
         $("#macroFile2")[0].href = originalSource + "semi-macro/5000_5000.jpeg";
         $("#macroFile3")[0].href = originalSource + "semi-macro/3000_3000.jpeg";
         // Loadtime efficency Hack
-        // viewer.source.minLevel = 8;
+        viewer.source.minLevel = 8;
     });
 
     $("#name").position({
