@@ -1,6 +1,7 @@
 var originalSource = "";
 var lastMethod = "RGB";
 var threshTimer;
+var viewer;
 
 function bufferedRefreshTiles(viewer) {
     if (threshTimer) {
@@ -59,7 +60,7 @@ $(document).ready(function() {
         c.appendTo(a.parent());
     }
 
-    var viewer = new OpenSeadragon({
+    viewer = new OpenSeadragon({
         id: "view",
         tileSources: tileSourcesArray,
         preserveViewport: true,
