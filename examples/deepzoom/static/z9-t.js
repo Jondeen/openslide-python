@@ -69,20 +69,18 @@ $(document).ready(function() {
         showHomeControl: false,
         showFullPageControl: false,
         showReferenceStrip: true,
-        //referenceStripHeight: 50,
-        referenceStripWidth: 50,
-        //referenceStripSizeRatio: 0.15,
+        referenceStripSizeRatio: 0.05,
         showRotationControl: true,
         animationTime: 0.5,
         blendTime: 0.1,
         constrainDuringPan: true,
-        maxZoomPixelRatio: 2,
-        minZoomLevel: 1,
+        maxZoomPixelRatio: 1,
+        minZoomLevel: 2,
         visibilityRatio: 1,
         zoomPerScroll: 2,
         timeout: 120000,
         debugMode:       true,
-        debugGridColor:  "#f9276f",
+        debugGridColor:  "#000000",
     });
 
     viewer.addHandler("open", function() {
@@ -123,6 +121,11 @@ $(document).ready(function() {
     });
 	
     $("#sett_butt").on("change", function() {
+        refreshTiles(viewer);
+    });
+	
+    $("#matrix").on("change", function() {
+        viewer.debugMode = $("#matrix")[0].checked;
         refreshTiles(viewer);
     });
 	

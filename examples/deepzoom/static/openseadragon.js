@@ -12919,7 +12919,7 @@ $.ReferenceStrip = function ( options ) {
         this.panels.push( element );
 
     }
-    loadPanels( this, this.scroll == 'vertical' ? viewerSize.y : viewerSize.y, 0 );
+    loadPanels( this, this.scroll == 'vertical' ? viewerSize.y : viewerSize.x, 0 );
     this.setFocus( 0 );
 
 };
@@ -15289,7 +15289,7 @@ function drawTiles( drawer, lastDrawn ){
             tile.beingDrawn = true;
         }
 
-        if( drawer.debugMode ){
+        if( drawer.viewer.debugMode ){
             try{
                 drawDebugInfo( drawer, tile, lastDrawn.length, i );
             }catch(e){
@@ -15383,21 +15383,32 @@ function drawDebugInfo( drawer, tile, count, i ){
             tile.position.x + 10,
             tile.position.y + 40
         );
+        drawer.context.font = 'small-caps 11px ariel';
         drawer.context.fillText(
-            "Order: " + i + " of " + count,
+            "(Row at level " + (tile.level-1) + ": " + Math.floor(tile.x/2) + ")",
             tile.position.x + 10,
             tile.position.y + 50
         );
         drawer.context.fillText(
-            "Size: " + tile.size.toString(),
+            "(Column at level " + (tile.level-1) + ": " + Math.floor(tile.y/2) + ")",
             tile.position.x + 10,
             tile.position.y + 60
         );
-        drawer.context.fillText(
-            "Position: " + tile.position.toString(),
-            tile.position.x + 10,
-            tile.position.y + 70
-        );
+        //drawer.context.fillText(
+        //    "Order: " + i + " of " + count,
+            // tile.position.x + 10,
+            // tile.position.y + 50
+        // );
+        // drawer.context.fillText(
+            // "Size: " + tile.size.toString(),
+            // tile.position.x + 10,
+            // tile.position.y + 60
+        // );
+        // drawer.context.fillText(
+            // "Position: " + tile.position.toString(),
+            // tile.position.x + 10,
+            // tile.position.y + 70
+        // );
         drawer.context.restore();
     }
 }
