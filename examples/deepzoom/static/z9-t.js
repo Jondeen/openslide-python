@@ -79,7 +79,7 @@ $(document).ready(function() {
         visibilityRatio: 1,
         zoomPerScroll: 2,
         timeout: 120000,
-        debugMode:       true,
+        debugMode:       false,
         debugGridColor:  "#000000",
     });
 
