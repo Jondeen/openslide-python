@@ -39,12 +39,14 @@ function refreshTiles(viewer) {
 
     method = $("#method")[0].selectedOptions[0].innerHTML;
     url = originalSource.split("/");
+	
     if ($("#sett_butt")[0].checked) {
         url.splice(4, 0, "thresholded", method, a, b, c);
 		location.href = "http://" + location.host + location.pathname + "#" + method + "=" + a + "&" + b + "&" + c;
     } else {
-		location.href = "http://" + location.host + location.pathname;
+		location.href = "http://" + location.host + location.pathname + "#";
 	}
+	
     viewer.source.tilesUrl = url.join("/");
     viewer.drawer.reset();
     viewer.drawer.update();
