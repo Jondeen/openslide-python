@@ -41,8 +41,10 @@ function refreshTiles(viewer) {
     url = originalSource.split("/");
     if ($("#sett_butt")[0].checked) {
         url.splice(4, 0, "thresholded", method, a, b, c);
-    }
-    location.href = "http://" + location.host + location.pathname + "#" + method + "=" + a + "&" + b + "&" + c;
+		location.href = "http://" + location.host + location.pathname + "#" + method + "=" + a + "&" + b + "&" + c;
+    } else {
+		location.href = "http://" + location.host + location.pathname;
+	}
     viewer.source.tilesUrl = url.join("/");
     viewer.drawer.reset();
     viewer.drawer.update();
@@ -79,8 +81,8 @@ $(document).ready(function() {
         visibilityRatio: 1,
         zoomPerScroll: 2,
         timeout: 120000,
-        debugMode:       false,
-        debugGridColor:  "#000000",
+        debugMode:       true,
+        debugGridColor:  "#f9276f",
     });
 
     viewer.addHandler("open", function() {
@@ -121,11 +123,6 @@ $(document).ready(function() {
     });
 	
     $("#sett_butt").on("change", function() {
-        refreshTiles(viewer);
-    });
-	
-    $("#matrix").on("change", function() {
-        viewer.debugMode = $("#matrix")[0].checked;
         refreshTiles(viewer);
     });
 	
