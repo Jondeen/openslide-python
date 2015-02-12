@@ -41,8 +41,10 @@ function refreshTiles(viewer) {
     url = originalSource.split("/");
     if ($("#sett_butt")[0].checked) {
         url.splice(4, 0, "thresholded", method, a, b, c);
-    }
-    location.href = "http://" + location.host + location.pathname + "#" + method + "=" + a + "&" + b + "&" + c;
+		location.href = "http://" + location.host + location.pathname + "#" + method + "=" + a + "&" + b + "&" + c;
+    } else {
+		location.href = "http://" + location.host + location.pathname;
+	}
     viewer.source.tilesUrl = url.join("/");
     viewer.drawer.reset();
     viewer.drawer.update();
@@ -123,7 +125,7 @@ $(document).ready(function() {
     $("#sett_butt").on("change", function() {
         refreshTiles(viewer);
     });
-	
+
     $("#matrix").on("change", function() {
         viewer.debugMode = $("#matrix")[0].checked;
         refreshTiles(viewer);
