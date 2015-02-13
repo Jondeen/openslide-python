@@ -4,46 +4,26 @@
 <div id="name" class="positionable"><span class="filename"></span></span></div>
 <div id="change_input" title="Thresholds">
 	<form action="#" method="get">
-		<div id="wrapper">
-			<div class="thresholdselector pull-to-left">
-				<span class="channel-name">&nbsp;&nbsp;&nbsp;</span>
-				<span class="inverting pull-to-left"><input type="checkbox"></span>
-				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left low less"></span>
-				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left low more" ></span>
-				<div class="channel-slider RGB pull-to-left"></div>
-				<span class="ui-icon-arrowthick-1-w ui-icon pull-to-left high less"></span>
-				<span class="ui-icon-arrowthick-1-e ui-icon pull-to-left high more" ></span>
-				<span class="channel-value">0-255</span>
-			</div>
-		</div>
-    <select name="method" id="method">
-      <option selected="selected">RGB</option>
-      <option>HLS</option>
-      <option>HSV</option>
-      <option>LAB</option>
-      <option>LUV</option>
-      <option>XYZ</option>
-    </select>
-<input type="checkbox" id="sett_butt"><label for="sett_butt">Thresholded</label><input type="checkbox" id="matrix"><label for="matrix">The Matrix</label>
-		<button id="upd_butt">Refresh</button>
-	</form>
-	<div class="links">
-	<a href="#" id="macroFile1" class="pull-to-left">
-	ASMI</a>
-	<span class="pull-to-left">&nbsp;&#x22D9;&nbsp;</span>
-	<a href="#" id="macroFile2" class="pull-to-left">
-	ASMI</a>
-	<span class="pull-to-left">&nbsp;&#x226B;&nbsp;</span>
-	<a href="#" id="macroFile3" class="pull-to-left">
-	ASMI</a>
-	<a href="#" id="currentFile" class="pull-to-right"><span class="pull-to-right ui-icon ui-icon-arrowthickstop-1-s"></span>
-	As shown</a>
-	</div>
+		
+		<table id="wrapper" data-bind="foreach: channels">
+		<tr>
+				<td><span class="ui-icon ui-icon-minus"></span></td>
+				<td><span class="ui-icon ui-icon-plus"></span></td><td>
+				<div style="width:120px" data-bind="slider: {values: values, realtime: true}"></div></td><td>
+				<span class=" ui-icon ui-icon-minus"></span></td>
+				<td><span class=" ui-icon ui-icon-plus"></span></td>
+				<td><span><input type="checkbox" data-bind="checked: checked" /></span></td>
+		</tr>
+		</table>
+
+
 </div>
 <link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='knockout-min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='knockout-jqueryui.min.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='z9-t.css') }}">
 <script type="text/javascript">
 var imagePrefixURL="{{ url_for('static', filename='images/') }}";
