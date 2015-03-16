@@ -844,21 +844,21 @@ body .ui-tooltip {
 	font-size: 1em;
 }
 .ui-widget-content {
-	border: 1px solid #666666;
-	background: #000000 url("images/ui-bg_carbon-fiber_20_000000_8x9.png") 50% 50% repeat;
-	color: #ffffff;
+	border: 1px solid #706158;
+	background: #464341;
+	color: #B3ABA7;
 }
 .ui-widget-content a {
-	color: #ffffff;
+	color: #B3ABA7;
 }
 .ui-widget-header {
-	border: 1px solid #333333;
-	background: #333333 url("images/ui-bg_flat_25_333333_40x100.png") 50% 50% repeat-x;
-	color: #ffffff;
+	border: 1px solid #706158;
+	background: #99938F;
+	color: #464341;
 	font-weight: bold;
 }
 .ui-widget-header a {
-	color: #ffffff;
+	color: #B3ABA7;
 }
 
 /* Interaction states
@@ -866,15 +866,15 @@ body .ui-tooltip {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-	border: 1px solid #666666;
-	background: #555555 url("images/ui-bg_flat_20_555555_40x100.png") 50% 50% repeat-x;
+	border: 1px solid #706158;
+	background: #B3ABA7;
 	font-weight: bold;
-	color: #eeeeee;
+	color: #A18150;
 }
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
-	color: #eeeeee;
+	color: #A18150;
 	text-decoration: none;
 }
 .ui-state-hover,

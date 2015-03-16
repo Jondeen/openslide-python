@@ -1,4 +1,12 @@
 
+#conButtons {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  display: inline-block;
+  background: none transparent;
+}
 
 html {
     overflow: hidden;
@@ -12,7 +20,7 @@ div#view {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: white;
     color: white;
 }
 
@@ -24,30 +32,31 @@ div#view {
 
 
 
-.ui-dialog-titlebar-close {
-  display: none;
-}
+
 .inverting {
 	margin-bottom: 1px;
 }
 
 .ui-slider-handle {
-	font-size: 12px;
-	margin-top: 3px;
+	font-size: 11px;
+	margin-top: 0px;
 }
 
 .ui-slider {
 	margin: 0px 3px;
 }
 
+.boxCaption {
+ font-size: 13px;
+ }
 
-.channel-name,.channel-value {
-	font-size: 14px;
-	margin-right: 0px;
+.ui-widget-content {
+	font-size: 11px;
 }
+
 .channel-value {
 	width: 50px;
-	}
+}
 
 .ui-icon {
 	cursor: pointer;
@@ -55,12 +64,20 @@ div#view {
 }
 
 .links {
-	font-size: 12px;
+	font-size: 10px;
 
 }
-
+.menu-bar {
+  display: inline-block;
+  position: relative;
+  float: right;
+}
 .links a {
 	text-decoration: none;
+}
+
+#ui-id-1 {
+ width: inherit;
 }
 
 .ui-icon-arrowthickstop-1-s {
@@ -72,7 +89,7 @@ div#view {
 }
 
 .ui-widget select,.ui-widget input,.ui-widget label,.ui-widget button,.ui-widget option{
-	font-size: 12px;
+	font-size: 10px;
 }
 
 #channel1 .channel-slider.LAB{

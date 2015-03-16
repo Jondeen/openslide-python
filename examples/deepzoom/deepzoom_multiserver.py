@@ -184,7 +184,7 @@ def testing(foldername):
     return render_template('slide-fullpage.html',slide_url=file_names,slide_filename="Testers")
 
 
-@app.route('/<path:path>_files/thresholded/<string:method>/<int:Rmin>:<int:Rmax>/<int:Gmin>:<int:Gmax>/<int:Bmin>:<int:Bmax>/<int:level>/<int:col>_<int:row>.<format>')
+@app.route('/<path:path>_files/thresholded/<string:method>/<int:Rmin>,<int:Rmax>/<int:Gmin>,<int:Gmax>/<int:Bmin>,<int:Bmax>/<int:level>/<int:col>_<int:row>.<format>')
 def tile_thresh(path, method,Rmin,Rmax,Gmin,Gmax,Bmin,Bmax,level, col, row, format):
     return tile(path,level,col,row,format,method=method,thresholds=[(Rmin,Rmax),(Gmin,Gmax),(Bmin,Bmax)])
 
@@ -192,7 +192,7 @@ def tile_thresh(path, method,Rmin,Rmax,Gmin,Gmax,Bmin,Bmax,level, col, row, form
 def tile(path, level, col, row, format,thresholds=None,method=None):
     slide = _get_slide(path)
     format = format.lower()
-    if format != 'jpeg' and format != 'png':
+    if format != 'jpeg' and format != 'png' and format != 'tiff':
         # Not supported by Deep Zoom
         abort(404)
     try:
@@ -204,8 +204,14 @@ def tile(path, level, col, row, format,thresholds=None,method=None):
     if thresholds is not None and method is not None:
       w,h=tile.size
       thresholder = T.Thresholder(thresholds,"rgb",method)
-      tile=thresholder.threshold_image(tile)
-    tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
+      if format == "png":
+          threshed = thresholder.threshold_image(tile,True)
+          tile.convert("RGBA")
+          tile.putalpha(threshed)
+          tile.save(buf, format)
+      else:
+          tile=thresholder.threshold_image(tile)
+          tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
     return resp

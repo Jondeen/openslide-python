@@ -90,7 +90,7 @@ class Thresholder():
     self.lower=lower
     self.upper=upper
     
-  def threshold_image(self,image):   
+  def threshold_image(self,image,returnAlpha=False):   
     """Performs thresholding on a whole image.
 
     Args:
@@ -123,6 +123,8 @@ class Thresholder():
     def print8(thinga,thingb,thingc):
       for i in range(8):
         print "%15d %15d %15d" % (thinga[i][0],thingb[i],thingc[i])
+    if returnAlpha:
+        return Image.fromarray(numpy.uint8(mask),"L")
     mask=cv2.cvtColor(numpy.uint8(mask),cv2.COLOR_GRAY2RGB)
     outimage=mask&backup
     return self.cv_2_pil(outimage)

@@ -1,19 +1,48 @@
 <!doctype html>
 <title>{{ slide_filename }}</title>
+<div id="conButtonsPata">
+<div id="conButtonsMeta">
+<div id="conButtons">
+<span id="zoom-in" class="menu-bar ui-icon ui-icon-zoomin"></span>
+<span id="zoom-out" class="menu-bar ui-icon ui-icon-zoomout"></span>
+<span id="previous" class="menu-bar ui-icon ui-icon-arrowreturnthick-1-w"></span>
+<span id="next" class="menu-bar ui-icon ui-icon-arrowreturnthick-1-e"></span>
+</div>
+</div>
+</div>
 <div id="view"></div>
 <div id="name" class="positionable"><span class="filename"></span></span></div>
-<div id="change_input" title="Thresholds">
+<div id="change-input" title="Thresholds">
 	<form action="#" method="get">
 		
-		<table id="wrapper" data-bind="foreach: channels">
+		<table>
+			<tbody>
+		<tr><td>
+			<select data-bind="options: colorspaces_choices, value: colorspaces_choices.theSelected"></select>
+			</td>
+			<td>
+			<span class="boxCaption"><input type="checkbox" data-bind="checked: enabled" />Enable Threshold</span>
+		</td></tr>
+		</tbody>
+		</table>
+		<table id="wrapper">
+			<tbody>
+		<!-- ko foreach: channels -->
 		<tr>
-				<td><span class="ui-icon ui-icon-minus"></span></td>
-				<td><span class="ui-icon ui-icon-plus"></span></td><td>
-				<div style="width:120px" data-bind="slider: {values: values, realtime: true}"></div></td><td>
-				<span class=" ui-icon ui-icon-minus"></span></td>
-				<td><span class=" ui-icon ui-icon-plus"></span></td>
-				<td><span><input type="checkbox" data-bind="checked: checked" /></span></td>
+				<td><span data-bind="text: minVal"></span></td>
+				<td><span class="ui-icon ui-icon-minus" data-bind="click: nudge(LOW,DEC)"></span></td>
+				<td><span class="ui-icon ui-icon-plus" data-bind="click: nudge(LOW,INC)"></span></td><td>
+				<div style="width:120px" data-bind="slider: {values: values, realtime: true, min: 0, max: 255}"></div></td><td>
+				<span class=" ui-icon ui-icon-minus" data-bind="click: nudge(HIGH,DEC)"></span></td>
+				<td><span class=" ui-icon ui-icon-plus" data-bind="click: nudge(HIGH,INC)"></span></td>
+				<td><span data-bind="text: maxVal"></span></td>
+				<td><span><input type="checkbox" data-bind="checked: inverted"/></span></td>
 		</tr>
+		<!-- /ko -->
+		<tr><td colspan=6>
+			<button data-bind="click: count">Count</button>
+		</td></tr>
+		</tbody>
 		</table>
 
 
@@ -24,6 +53,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='knockout-min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='knockout-jqueryui.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='i-color.js') }}"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='z9-t.css') }}">
 <script type="text/javascript">
 var imagePrefixURL="{{ url_for('static', filename='images/') }}";
