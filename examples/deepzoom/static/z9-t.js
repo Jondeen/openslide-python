@@ -2,6 +2,10 @@ var originalSource = "";
 var lastMethod = "RGB";
 var threshTimer;
 var viewer;
+var helper;
+var snapStore;
+var oldData;
+
 
 function deb() {
     if (location.hash == "#deb") {
@@ -66,10 +70,14 @@ function ChannelsUI() {
     self.channels = [];
     while (self.channelCount < 3) self.channels[self.channelCount++] = (new Channel(self));
 
-    self.enabled = ko.observable(true);
+    self.enabled = ko.observable(false);
 
     self.enabled.subscribe(function() {
+		if (!self.enabled()) {
+			refreshTiles(self);
+		} else {
         bufferedRefreshTiles(self);
+		}
     });
     self.count = function() {
         if (inBrowser) {
@@ -88,19 +96,29 @@ function ChannelsUI() {
         }
     }
 
+	self.overlay = function() {
+		addOverlay(15000,15000,2000);
+	}
+	
     return self;
 }
 
 function bufferedRefreshTiles(model) {
+
+
     if (threshTimer) {
         clearTimeout(threshTimer);
     }
-    threshTimer = setTimeout(function() {
-        refreshTiles(model)
-    }, 1500);
+	if (model.enabled()) {
+		threshTimer = setTimeout(function() {
+			refreshTiles(model)
+		}, 1500);
+	}
 }
 
 function refreshTiles(model) {
+
+	
     if (threshTimer) {
         clearTimeout(threshTimer);
     }
@@ -125,121 +143,6 @@ function refreshTiles(model) {
     viewer.drawer.update();
 
 }
-
-
-function countContext(ctx, displayCount) {
-    var payload = {
-        i: 0,
-        r: 0,
-        g: 0,
-        b: 0,
-        a: 0,
-        t: 0,
-        c: 0,
-        ctxData: null,
-        data: null,
-        ctx: ctx
-    }
-
-    var logics = {
-        init: function(payload) {},
-        run: function(payload) {},
-        finish: function(payload) {}
-    }
-
-    if (displayCount == true) {
-        logics.init = function(payload) {
-            payload.ctxData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-            var data = payload.ctxData.data;
-            payload.data = data;
-        };
-
-        logics.run = function(payload) {
-            payload.data[payload.i] = 0; //red
-            payload.data[payload.i + 1] = 0; //green
-            payload.data[payload.i + 2] = 0; //blue
-            payload.c++;
-        };
-        logics.finish = function(payload) {
-            payload.ctx.putImageData(payload.ctxData, 0, 0);
-        }
-    } else {
-        logics.init = function(payload) {
-            payload.ctxData = payload.ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-            payload.data = payload.ctxData.data;
-        };
-
-        logics.run = function(payload) {
-            payload.c++;
-        };
-
-        logics.finish = function(payload) {}
-    }
-    pl = payload;
-    logics.init(pl);
-    while (pl.i < pl.data.length) {
-        pl.r = pl.data[pl.i]; //red
-        pl.g = pl.data[pl.i + 1]; //green
-        pl.b = pl.data[pl.i + 2]; //blue
-        pl.a = pl.data[pl.i + 3]; //alpha
-        if (testColor(pl.r, pl.g, pl.b, pl.a)) logics.run(pl);
-        pl.t++;
-        pl.i += 4;
-
-    }
-    logics.finish(pl);
-
-    console.log(pl.t);
-    console.log(pl.c);
-    console.log(pl.c / pl.t);
-}
-
-function countContext2(ctx) {
-    var i = 0,
-        r = 0,
-        g = 0,
-        b = 0,
-        a = 0,
-        t = 0,
-        c = 0,
-        ctxData = null,
-        data = null,
-        ctx = ctx;
-
-    ctxData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-    data = ctxData.data;
-
-
-    while (i < data.length) {
-        r = data[i]; //red
-        g = data[i + 1]; //green
-        b = data[i + 2]; //blue
-        a = data[i + 3]; //alpha
-        if (testColor(r, g, b, a)) c++;
-        t++;
-        i += 4;
-    }
-
-    console.log(t);
-    console.log(c);
-    console.log(c / t);
-}
-
-function testColor(r, g, b, a) {
-    cs = colorspaces_choices.theSelected();
-    c = {
-        r: r,
-        g: g,
-        b: b
-    };
-    c = IColor(c, cs);
-    for (n = 0; n < 3; n++)
-        if (!channels[n].test(c[cs[n]])) return false;
-    if (a == 255) return true;
-    return false;
-}
-
-
 
 
 $(document).ready(function() {
@@ -270,12 +173,12 @@ $(document).ready(function() {
         debugMode: false,
         debugGridColor: "#000000",
     });
+	helper=viewer.activateImagingHelper();
 
     viewer.addHandler("open", function() {
         originalSource = viewer.source.tilesUrl;
         $("#name .filename")[0].innerHTML = originalSource;
         $(viewer.element).find('.navigator').css('background-color', 'transparent');
-		
 
         // Loadtime efficency Hack
         viewer.source.minLevel = 8;
@@ -315,32 +218,73 @@ $(document).ready(function() {
         //viewer.debugMode = $("#matrix")[0].checked;
         //refreshTiles(viewer);
     });
-	dialogState="visible";
-	dialogMinHeight="20px";
-	dialogMaxHeight="120px";
-	$(".ui-dialog-titlebar").on("click",function() {
-		dialog = $(this).parent();
-		console.log(dialog.css("height"));
-		if (dialogState=="hidden") {
-			dialog.animate({height: dialogMaxHeight},100);
-			dialogState="visible";
-		} else {
-			dialogMaxHeight=dialog.css("height");
-			dialog.animate({height: dialogMinHeight},100);
-			dialogState="hidden";
-		}
-	});
-
-
-    ko.applyBindings(ChannelsUI);
-    $("#change-input").disableSelection();
 	
 	titlebar=$(".ui-dialog-titlebar");
 	titlebar[0].lastElementChild.remove();
 	titlebar.append($("#conButtons")[0].children);
 	$("#conButtons").remove();
+	dialogState="visible";
+	dialogMinHeight="20px";
+	dialogMaxHeight="120px";
+	dialogClickEnabled=true;
+	$(".ui-dialog-titlebar .ui-icon").on("click", function() {
+		dialogClickEnabled = false;
+		setTimeout(function(){dialogClickEnabled = true;},100);
+	});
+	titlebar.parent().draggable({
+		stop: function() {
+		dialogClickEnabled = false;
+		setTimeout(function(){dialogClickEnabled = true;},100);
+		}
+	});
+	titlebar.on("click",function() {
+		if (dialogClickEnabled) {
+			dialog = $(this).parent();
+			if (dialogState=="hidden") {
+				dialog.animate({height: dialogMaxHeight},100);
+				dialogState="visible";
+			} else {
+				dialogMaxHeight=dialog.css("height");
+				dialog.animate({height: dialogMinHeight},100);
+				dialogState="hidden";
+			}
+		}
+	});
+	
+	 var imagingHelper = viewer.activateImagingHelper({onImageViewChanged: onImageViewChanged});
+
+    function onImageViewChanged(event) {
+        // event.viewportWidth == width of viewer viewport in logical coordinates relative to image native size
+        // event.viewportHeight == height of viewer viewport in logical coordinates relative to image native size
+        // event.viewportOrigin == OpenSeadragon.Point, top-left of the viewer viewport in logical coordinates relative to image
+        // event.viewportCenter == OpenSeadragon.Point, center of the viewer viewport in logical coordinates relative to image
+        // event.zoomFactor == current zoom factor
+
+		
+    }
+
+
+    ko.applyBindings(ChannelsUI);
+    $("#change-input").disableSelection();
+	
 });
 
+addOverlay = function(a,b,c) {
+	var s=1; //Stroke
+	var svgNode = (typeof viewer._svgOverlayInfo === 'undefined') ? viewer.svgOverlay():viewer.svgOverlay;
+	var lp=helper.vectorToVector(a,b,'d','l');
+	var c=helper.vectorToDistance(c,0,'d','l');
+	var s=helper.vectorToDistance(s,0,'d','l');
+	
+	d3.select(svgNode).append("rect")
+		.style('opacity', 0.3)
+		.style('fill', '#f00')
+		.attr("x", lp.x)
+		.attr("width", c)
+		.attr("y", lp.y)
+		.attr("height", c);
+}
+ 
 dt = function() {
     now = (new Date()).getTime();
     console.log(now - then);
