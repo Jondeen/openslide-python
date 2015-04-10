@@ -41,6 +41,7 @@
 		<!-- /ko -->
 		<tr><td colspan=6>
 			<button data-bind="click: count">Count</button>
+			<button data-bind="click: overlay">Overlay</button>
 		</td></tr>
 		</tbody>
 		</table>
@@ -48,15 +49,11 @@
 
 </div>
 <link rel="stylesheet" href="{{ url_for('static', filename='theme/jquery-ui.css') }}">
-<script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='openseadragon.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='knockout-min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='knockout-jqueryui.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='i-color.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='z9-t.css') }}">
 <script type="text/javascript">
+var jss="{{ url_for('static',filename='.')}}";
 var imagePrefixURL="{{ url_for('static', filename='images/') }}";
 var tileSourcesArray=[{{ slide_url | safe }}];
 </script>
+<script type="text/javascript" src="{{ url_for('static', filename='require.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='z9-t.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='z9-t.css') }}">

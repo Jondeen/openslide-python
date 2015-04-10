@@ -183,9 +183,9 @@ def testing(foldername):
     file_names=",".join(["\"/" + subPath + x + ".dzi\"" for x in os_files])
     return render_template('slide-fullpage.html',slide_url=file_names,slide_filename="Testers")
 
-
 @app.route('/<path:path>_files/thresholded/<string:method>/<int:Rmin>,<int:Rmax>/<int:Gmin>,<int:Gmax>/<int:Bmin>,<int:Bmax>/<int:level>/<int:col>_<int:row>.<format>')
 def tile_thresh(path, method,Rmin,Rmax,Gmin,Gmax,Bmin,Bmax,level, col, row, format):
+    print "here"
     return tile(path,level,col,row,format,method=method,thresholds=[(Rmin,Rmax),(Gmin,Gmax),(Bmin,Bmax)])
 
 @app.route('/<path:path>_files/<int:level>/<int:col>_<int:row>.<format>')
@@ -212,6 +212,9 @@ def tile(path, level, col, row, format,thresholds=None,method=None):
       else:
           tile=thresholder.threshold_image(tile)
           tile.save(buf, format, quality=app.config['DEEPZOOM_TILE_QUALITY'])
+    else:
+      tile.save(buf, format)
+    print "here"
     resp = make_response(buf.getvalue())
     resp.mimetype = 'image/%s' % format
     return resp

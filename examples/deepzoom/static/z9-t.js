@@ -1,3 +1,7 @@
+
+require([jss+"jquery.js",jss+"jquery-ui.js",jss+"openseadragon.js","//d3js.org/d3.v3.min.js",jss+"svg-overlay/openseadragon-svg-overlay.js",jss+"knockout.js",jss+"knockout-jqueryui.js",jss+"i-color.js",jss+"openseadragon-imaginghelper.js",jss+"snap.svg.js"]); 
+
+
 var originalSource = "";
 var lastMethod = "RGB";
 var threshTimer;
@@ -145,7 +149,7 @@ function refreshTiles(model) {
 }
 
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function(event) { 
 
     viewer = new OpenSeadragon({
         id: "view",
