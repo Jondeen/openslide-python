@@ -15385,12 +15385,12 @@ function drawDebugInfo( drawer, tile, count, i ){
         );
         drawer.context.font = 'small-caps 11px ariel';
         drawer.context.fillText(
-            "(Row at level " + (tile.level-1) + ": " + Math.floor(tile.x/2) + ")",
+            "(Column at level " + (tile.level-1) + ": " + Math.floor(tile.x/2) + ")",
             tile.position.x + 10,
             tile.position.y + 50
         );
         drawer.context.fillText(
-            "(Column at level " + (tile.level-1) + ": " + Math.floor(tile.y/2) + ")",
+            "(Row at level " + (tile.level-1) + ": " + Math.floor(tile.y/2) + ")",
             tile.position.x + 10,
             tile.position.y + 60
         );
