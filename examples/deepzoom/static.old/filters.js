@@ -15,14 +15,15 @@ Filters.getCanvas = function(w, h) {
 function rgbToLab(r, g, b) {
     rgb={r:r, g:g, b:b};
     lab=Color.convert(rgb,'lab');
-    retValue=[lab.l,lab.a,lab.b]
+    retValue=[lab.l,lab.a,lab.b];
     return retValue;
 }
 
 function rgbToHsl(r, g, b) {
-    r /= 255,
-    g /= 255,
+    r /= 255;
+    g /= 255;
     b /= 255;
+
     var max = Math.max(r, g, b),
     min = Math.min(r, g, b);
     var h, s, l = (max + min) / 2;
@@ -51,7 +52,7 @@ function rgbToHsl(r, g, b) {
 
 function getMinsMax(color, floated) {
     var cmin = $("#" + color + "min").val();
-    var cmax = $("#" + color + "max").val()
+    var cmax = $("#" + color + "max").val();
     if (floated) {
         return[float(cmin) / 255.0, float(cmax) / 255.0];
     }
@@ -110,7 +111,7 @@ Filters.applyThreshold = function(pixels, thresh) {
 
     }
     return pixels;
-}
+};
 
 function testLevels(v, thresh) {
     var MIN = 0,
