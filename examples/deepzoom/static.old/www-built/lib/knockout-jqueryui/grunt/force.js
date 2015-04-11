@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){n.exports=function(e){"use strict";var t=e.option("force");e.registerTask("force",function(n){n==="on"?e.option("force",!0):n==="off"?e.option("force",!1):n==="restore"&&e.option("force",t)})}});

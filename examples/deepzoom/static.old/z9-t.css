@@ -1,0 +1,166 @@
+
+#conButtons {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  display: inline-block;
+  background: none transparent;
+}
+
+html {
+    overflow: hidden;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+div#view {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    color: white;
+}
+
+  .positionable {
+    position: absolute;
+    display: block;
+    text-align: center;
+  }
+
+
+
+
+.inverting {
+	margin-bottom: 1px;
+}
+
+.ui-slider-handle {
+	font-size: 11px;
+	margin-top: 0px;
+}
+
+.ui-slider {
+	margin: 0px 3px;
+}
+
+.boxCaption {
+ font-size: 13px;
+ }
+
+.ui-widget-content {
+	font-size: 11px;
+}
+
+.channel-value {
+	width: 50px;
+}
+
+.ui-icon {
+	cursor: pointer;
+	cursor: hand;
+}
+
+.links {
+	font-size: 10px;
+
+}
+.menu-bar {
+  display: inline-block;
+  position: relative;
+  float: right;
+}
+.links a {
+	text-decoration: none;
+}
+
+#ui-id-1 {
+ width: inherit;
+}
+
+.ui-icon-arrowthickstop-1-s {
+	margin-top: 1px;
+	}
+
+.thresholdselector {
+	width: 100%;
+}
+
+.ui-widget select,.ui-widget input,.ui-widget label,.ui-widget button,.ui-widget option{
+	font-size: 10px;
+}
+
+#channel1 .channel-slider.LAB{
+    background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 0, 0)),color-stop(1, rgb(255, 255, 255)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(255, 255, 255) 100%);
+    background-image: linear-gradient(to right,rgb(0, 0, 0) 0%,rgb(255, 255, 255) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(255, 255, 255) 100%);
+}
+@media \0screen\,screen\9 {
+    #channel1 .channel-slider.LAB{
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff000000",endColorstr="#ffffffff",GradientType=1);
+    }
+}
+
+#channel2 .channel-slider.LAB{
+	background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 255, 0)),color-stop(1, rgb(255, 0, 0)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 255, 0) 0%,rgb(255, 0, 0) 100%);
+    background-image: linear-gradient(to right,rgb(0, 255, 0) 0%,rgb(255, 0, 0) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 255, 0) 0%,rgb(255, 0, 0) 100%);
+}
+@media \0screen\,screen\9 {
+    #channel2 .channel-slider.LAB{
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff00ff00",endColorstr="#ffff0000",GradientType=1);
+    }
+}
+
+#channel3 .channel-slider.LAB{
+    background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 0, 255)),color-stop(1, rgb(255, 255, 0)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 0, 255) 0%,rgb(255, 255, 0) 100%);
+    background-image: linear-gradient(to right,rgb(0, 0, 255) 0%,rgb(255, 255, 0) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 0, 255) 0%,rgb(255, 255, 0) 100%);
+}
+@media \0screen\,screen\9 {
+    #channel3.LAB .channel-slider {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff0000ff",endColorstr="#ffffff00",GradientType=1);
+    }
+}
+
+#channel1 .channel-slider.RGB{
+    background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 0, 0)),color-stop(1, rgb(255, 0, 0)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(255, 0, 0) 100%);
+    background-image: linear-gradient(to right,rgb(0, 0, 0) 0%,rgb(255, 0, 0) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(255, 0, 0) 100%);
+}
+@media \0screen\,screen\9 {
+    #channel1 .channel-slider.RGB{
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff000000",endColorstr="#ff0000ff",GradientType=1);
+    }
+}
+
+#channel2 .channel-slider.RGB{
+    background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 0, 0)),color-stop(1, rgb(0, 255, 0)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(0, 255, 0) 100%);
+    background-image: linear-gradient(to right,rgb(0, 0, 0) 0%,rgb(0, 255, 0) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(0, 255, 0) 100%);
+}
+@media \0screen\,screen\9 {
+    #channel2 .channel-slider.RGB{
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff000000",endColorstr="#00ff00ff",GradientType=1);
+    }
+}
+
+#channel3 .channel-slider.RGB{
+    background-image: -webkit-gradient(linear, 0% 0%, 100% 0%,color-stop(0, rgb(0, 0, 0)),color-stop(1, rgb(0, 0, 255)));
+    background-image: -webkit-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(0, 0, 255) 100%);
+    background-image: linear-gradient(to right,rgb(0, 0, 0) 0%,rgb(0, 0, 255) 100%);
+    background-image: -ms-linear-gradient(left,rgb(0, 0, 0) 0%,rgb(0, 0, 255) 100%);
+}
+
+@media \0screen\,screen\9 {
+    #channel3.RGB .channel-slider {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff000000",endColorstr="#0000ffff",GradientType=1);
+    }
+}

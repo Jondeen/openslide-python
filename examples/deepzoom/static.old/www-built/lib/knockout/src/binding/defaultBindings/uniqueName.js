@@ -1,0 +1,1 @@
+(function(e){var t;define([],function(){return function(){ko.bindingHandlers.uniqueName={init:function(e,t){if(t()){var n="ko_unique_"+ ++ko.bindingHandlers.uniqueName.currentIndex;ko.utils.setElementName(e,n)}}},ko.bindingHandlers.uniqueName.currentIndex=0}.call(e),t})})(this);

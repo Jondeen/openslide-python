@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){n.exports={server:{options:{base:"",port:9999}}}});

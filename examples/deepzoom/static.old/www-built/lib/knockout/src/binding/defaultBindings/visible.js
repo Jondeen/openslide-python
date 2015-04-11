@@ -1,0 +1,1 @@
+(function(e){var t;define([],function(){return function(){ko.bindingHandlers.visible={update:function(e,t){var n=ko.utils.unwrapObservable(t()),r=e.style.display!="none";n&&!r?e.style.display="":!n&&r&&(e.style.display="none")}}}.call(e),t})})(this);

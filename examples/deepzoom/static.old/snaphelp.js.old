@@ -1,0 +1,178 @@
+snapHelper = {
+	initGetZoom : function() {
+		if (snapStore == null) {
+			snapStore=new Snap(helper.getImgWidth,helper.getImgHeight);
+				updMe = function() {
+					z=helper.getZoomFactor();
+		snapStore.transform('T'+z);
+	}
+			viewer.addOverlay({
+				element: snapStore.node, 
+				location: new OpenSeadragon.Rect(0,0,1,1),
+				onDraw: function() {
+									if (snapStore != null) {
+data={svgX:snapStore.node.children[2].x.baseVal.valueAsString, 
+				svgY:snapStore.node.children[2].y.baseVal.valueAsString, 
+				offsetHeight:snapStore.node.offsetHeight,
+				offsetLeft:snapStore.node.offsetLeft,
+				offsetTop:snapStore.node.offsetTop,
+				offsetWidth:snapStore.node.offsetWidth,
+				};
+				if (snapStore.hasOwnProperty("id")) {
+					if (oldData == null || oldData != data) {
+						outStr=[];
+						if (oldData == null) {
+						for (var property in data) {
+							if (data.hasOwnProperty(property)) {
+								outStr.push(property);
+							}
+						}
+						console.log(outStr.join("\t\t"));
+						}
+						out2Str=[];
+						for (var property in data) {
+							if (data.hasOwnProperty(property)) {
+								out2Str.push(data[property]);
+							}
+						}
+						console.log(out2Str.join("\t\t"));
+						oldData = data;
+					}
+				}
+
+// snapStore.node.offsetHeight: 
+// snapStore.node.offsetLeft: 
+// snapStore.node.offsetTop:
+// snapStore.node.offsetWidth: 
+	}
+				}
+				
+			});
+		}
+		return helper.getZoomFactor();
+	},
+	// All coords in screen (physical) pixels
+	// To get L0 w/h-values: (delta)physical / zoomFactor
+	// To get L0 position use helper.physicalToDataPoint(OpenSeadragon.Point())
+	rect : function (x,y,w,h,rx,ry) {
+		z=this.initGetZoom();
+		if (this.isAlreadyObject(x)) {
+			ob=x;
+			x=ob.x;
+			y=ob.y;
+			w=ob.w;
+			h=ob.h;
+			ry=ob.ry;
+			rx=ob.rx;
+		}
+
+		w/=z;
+		h/=z;
+		
+		if (rx!=null) {
+			rx/=z;
+			if (ry==null) {
+				ry=rx;
+			}
+		}
+		
+		physPoint=new OpenSeadragon.Point(x,y);
+		dataPoint=helper.physicalToDataPoint(physPoint);
+		x=dataPoint.x;
+		y=dataPoint.y;
+		return snapStore.rect(x,y,w,h,rx,ry);
+	},
+	circle : function(cx,cy,r) {
+		z=this.initGetZoom();
+		if (this.isAlreadyObject(cx)) {
+			ob=cx;
+			cx=ob.cx;
+			cy=ob.cy;
+			r=ob.r;
+		}
+
+		r/=z;
+		
+		physPoint=new OpenSeadragon.Point(cx,cy);
+		dataPoint=helper.physicalToDataPoint(physPoint);
+		cx=dataPoint.x;
+		cy=dataPoint.y;
+		return snapStore.circle(cx,cy,r);
+	},
+	image : function (src,x,y,w,h) {
+		z=this.initGetZoom();
+		if (this.isAlreadyObject(src)) {
+			ob=src;
+			src=ob.src;
+			x=ob.x;
+			y=ob.y;
+		}
+		
+		physPoint=new OpenSeadragon.Point(x,y);
+		dataPoint=helper.physicalToDataPoint(physPoint);
+		x=dataPoint.x;
+		y=dataPoint.y;
+		return snapStore.image(src,x,y,null,null);
+	},
+	ellipse : function (cx,cy,rx,ry) {
+		z=this.initGetZoom();
+		if (this.isAlreadyObject(cx)) {
+			ob=cx;
+			cx=ob.cx;
+			cy=ob.cy;
+			rx=ob.rx;
+			ry=ob.ry;
+		}
+
+		rx/=z;
+		ry/=z;
+		
+		physPoint=new OpenSeadragon.Point(cx,cy);
+		dataPoint=helper.physicalToDataPoint(physPoint);
+		cx=dataPoint.x;
+		cy=dataPoint.y;
+		return snapStore.circle(cx,cy,rx,ry);
+	},
+		
+	text : function (x,y,text) {
+		z=this.initGetZoom();
+		if (is(x, "object")) {
+			ob=x;
+			x=ob.x;
+			y=ob.y;
+			text=ob.text;
+		}
+		
+		physPoint=new OpenSeadragon.Point(x,y);
+		dataPoint=helper.physicalToDataPoint(physPoint);
+		x=dataPoint.x;
+		y=dataPoint.y;
+		return snapStore.rect(x,y,text);
+	},
+	
+	line : function (x1,y1,x2,y2) {
+		z=this.initGetZoom();
+		if (this.isAlreadyObject(x1)) {
+			ob=x;
+			x1=ob.x1;
+			y1=ob.y1;
+			x2=ob.x2;
+			y2=ob.y2;
+		}
+		
+		physPoint1=new OpenSeadragon.Point(x1,y1);
+		dataPoint1=helper.physicalToDataPoint(physPoint1);
+		x1=dataPoint1.x;
+		y1=dataPoint1.y;
+		
+		physPoint2=new OpenSeadragon.Point(x2,y2);
+		dataPoint2=helper.physicalToDataPoint(physPoint2);
+		x2=dataPoint2.x;
+		y2=dataPoint2.y;
+		return snapStore.rect(x1,y1,x2,y2);
+	},
+	
+	isAlreadyObject: function(o) {
+		return (o == "[object Object]");
+	}
+}
