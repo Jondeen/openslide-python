@@ -1,0 +1,2 @@
+#! /bin/sh
+git --work-tree=~/live/dev.z9.no/ --git-dir=/home/ogaard/gits/OpenSlideServe checkout -f
