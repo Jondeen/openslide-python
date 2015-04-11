@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){n.exports={options:{commitMessage:"Bumped the version number.",commitFiles:["-a"],updateConfigs:["package"],pushTo:"origin"}}});

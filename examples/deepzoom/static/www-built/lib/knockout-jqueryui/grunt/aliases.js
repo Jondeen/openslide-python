@@ -1,0 +1,1 @@
+define(["require","exports","module"],function(e,t,n){n.exports=function(e){e.registerTask("default",["concat:build","jshint:build"]),e.registerTask("dev",["connect","watch"]),e.registerTask("test",["default","connect","sauce_tunnel","saucelabs-jasmine","sauce_tunnel_stop"])}});

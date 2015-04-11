@@ -1,0 +1,1 @@
+/home/ogaard/gits/OpenSlideServe/deepzoom/static/knockout.js

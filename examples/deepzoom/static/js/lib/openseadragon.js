@@ -1,0 +1,1 @@
+/home/ogaard/gits/OpenSlideServe/examples/deepzoom/static/openseadragon.js

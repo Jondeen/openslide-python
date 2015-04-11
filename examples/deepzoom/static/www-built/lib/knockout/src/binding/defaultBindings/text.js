@@ -1,0 +1,1 @@
+(function(e){var t;define([],function(){return function(){ko.bindingHandlers.text={init:function(){return{controlsDescendantBindings:!0}},update:function(e,t){ko.utils.setTextContent(e,t())}},ko.virtualElements.allowedBindings.text=!0}.call(e),t})})(this);
