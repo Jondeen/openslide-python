@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){n.exports={release:{src:"dist/<%= meta.name %>.js",dest:"dist/<%= meta.name %>.min.js"}}});

@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){n.exports={release:{options:{archive:"dist/<%= meta.name %>.zip",pretty:!0},files:[{expand:!0,src:["**/*.js"],cwd:"dist"}]}}});

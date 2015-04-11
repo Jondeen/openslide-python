@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){"use strict";n.exports=function(e){e.registerTask("release","Creates a new release.",function(t){t==null&&e.warn("Version number must be specified, like grunt release:2.3.1"),e.option("setversion",t),e.task.run("bump-only","test","concat:release","jshint:release","copy","uglify","compress","bump-commit")})}});

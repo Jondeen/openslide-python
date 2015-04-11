@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){"use strict";n.exports=function(e,t){return{options:{username:process.env.SAUCE_USERNAME,key:process.env.SAUCE_ACCESS_KEY,identifier:t.tunnelId},server:{}}}});

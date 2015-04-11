@@ -1,1 +1,0 @@
-(function(e){var t;define([],function(){return function(){makeEventHandlerShortcut("click")}.call(e),t})})(this);

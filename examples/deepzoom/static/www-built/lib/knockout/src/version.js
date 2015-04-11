@@ -1,1 +1,0 @@
-(function(e){var t;define([],function(){return function(){ko.version="##VERSION##",ko.exportSymbol("version",ko.version)}.call(e),t})})(this);

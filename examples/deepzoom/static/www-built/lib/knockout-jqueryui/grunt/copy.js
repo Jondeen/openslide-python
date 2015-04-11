@@ -1,1 +1,0 @@
-define(["require","exports","module"],function(e,t,n){n.exports={release:{expand:!0,cwd:"src",src:"*.js",dest:"dist/amd/"}}});
